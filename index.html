@@ -123,12 +123,130 @@
       overflow-y: auto;
     }
 
+    /* ── Section tabs (Sentences / Compositions) ─────── */
+    .section-tabs {
+      display: flex;
+      gap: .4rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0;
+    }
+    .section-tab {
+      padding: .5rem 1.2rem;
+      border: none;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all .15s;
+      border-radius: 6px 6px 0 0;
+    }
+    .section-tab:hover { color: var(--accent); }
+    .section-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── Week filter pills ───────────────────────────── */
+    .week-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-bottom: 1.2rem;
+    }
+    .week-pill {
+      padding: .3rem .85rem;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: white;
+      font-size: .78rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .week-pill:hover { border-color: var(--accent); color: var(--accent); }
+    .week-pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* ── Compositions section ────────────────────────── */
+    #section-compositions { display: none; }
+    #section-sentences { display: block; }
+    .compositions-intro {
+      color: var(--text-muted);
+      font-size: .88rem;
+      margin-bottom: 1.2rem;
+      padding: .6rem 1rem;
+      background: var(--accent-soft);
+      border-radius: 8px;
+    }
+
+    .composition-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.6rem 1.8rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.04);
+    }
+    .composition-card:hover { box-shadow: 0 3px 12px rgba(0,0,0,.08); }
+    .comp-author {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .5rem;
+    }
+    .comp-week-tag {
+      display: inline-block;
+      font-size: .68rem;
+      font-weight: 600;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: .15rem .55rem;
+      border-radius: 10px;
+      margin-left: .5rem;
+      letter-spacing: .05em;
+    }
+    .comp-body {
+      font-family: 'Lora', serif;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      margin-bottom: .7rem;
+    }
+    .comp-translation {
+      font-size: .85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      border-top: 1px solid var(--border);
+      padding-top: .7rem;
+      margin-top: .5rem;
+    }
+    .comp-translation .lang-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-label);
+      margin-right: .4rem;
+    }
+
     /* Controls bar */
     .controls {
       display: flex;
       align-items: center;
       gap: .8rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.2rem;
       flex-wrap: wrap;
     }
     .controls label {
@@ -518,26 +636,34 @@
   <!-- ── Main content ───────────────────────────── -->
   <main>
 
-    <!-- Controls -->
-    <div class="controls">
-      <label>View:</label>
-      <div class="toggle-group">
-        <button class="toggle-btn active" id="btn-click" onclick="setMode('click')">Click to reveal</button>
-        <button class="toggle-btn" id="btn-color" onclick="setMode('color')">All colors</button>
-        <button class="toggle-btn" id="btn-plain" onclick="setMode('plain')">Plain text</button>
-      </div>
-
+    <!-- Section tabs -->
+    <div class="section-tabs">
+      <button class="section-tab active" id="stab-sentences" onclick="showSection('sentences')">📝 Sentences</button>
+      <button class="section-tab" id="stab-compositions" onclick="showSection('compositions')">📄 Compositions</button>
     </div>
 
+    <!-- ══════════════════════════════════════════════
+         SENTENCES SECTION
+         ══════════════════════════════════════════════ -->
+    <div id="section-sentences">
+
+      <!-- Color mode controls -->
+      <div class="controls">
+        <label>View:</label>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="btn-click" onclick="setMode('click')">Click to reveal</button>
+          <button class="toggle-btn" id="btn-color" onclick="setMode('color')">All colors</button>
+          <button class="toggle-btn" id="btn-plain" onclick="setMode('plain')">Plain text</button>
+        </div>
+      </div>
+
     <!-- ════════════════════════════════════════════
-         SENTENCES — add more following this pattern
+         SENTENCES — add more cards following this pattern
+         Use builder.html to generate the morpheme HTML!
          ════════════════════════════════════════════ -->
 
-    <div class="date-heading">February 13, 2026</div>
-
     <!-- ── SENTENCE 1: alaska ── -->
-    <div class="card" data-student="Aron">
-      <div class="card-meta">Aron · Feb 13</div>
+    <div class="card">
       <div class="quechua-line">
         <span class="m" data-cat="noun-root" data-gloss="I (subject topic)">ñoqa</span>
         <span class="m" data-cat="verb-root" data-gloss="walk / travel (verb root)">puri</span><span class="m" data-cat="verb-aspect" data-gloss="-saq: future 1st person">saq</span>
@@ -576,8 +702,7 @@
     </div>
 
     <!-- ── SENTENCE 2: plato ── -->
-    <div class="card" data-student="Aron">
-      <div class="card-meta">Aron · Feb 13</div>
+    <div class="card">
       <div class="quechua-line">
         <span class="m" data-cat="noun-root" data-gloss="plato: plate/dish">Plato</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="ta" data-gloss="-ta: accusative (direct object)">ta</span>
         <span class="m" data-cat="verb-root" data-gloss="maqchhi-: to wash">maqchhi</span><span class="m" data-cat="verb-aspect" data-gloss="-naykama: while I was (subordinating)">naykama</span>
@@ -617,8 +742,7 @@
     </div>
 
     <!-- ── SENTENCE 3: machashani ── -->
-    <div class="card" data-student="Aron">
-      <div class="card-meta">Aron · Feb 13</div>
+    <div class="card">
       <div class="quechua-line">
         <span class="m" data-cat="verb-root" data-gloss="macha-: to get drunk">Macha</span><span class="m" data-cat="verb-aspect" data-gloss="-sha: progressive aspect (currently doing)">sha</span><span class="m" data-cat="verb-aspect" data-gloss="-ni: 1st person singular">ni</span>
         <span class="m" data-cat="noun-root" data-gloss="sapa: every">sapa</span>
@@ -647,9 +771,8 @@
       </div>
     </div>
 
-    <!-- ── Dafne sentences ── -->
-    <div class="card" data-student="Dafne">
-      <div class="card-meta">Dafne · Feb 13</div>
+    <!-- ── Week 3 sentence 4 ── -->
+    <div class="card">
       <div class="quechua-line">
         <span class="m" data-cat="noun-root" data-gloss="ñoqa: I / me">Noqa</span>
         <span class="m" data-cat="verb-root" data-gloss="puñu-: to sleep">puñu</span><span class="m" data-cat="verb-aspect" data-gloss="-naykama: while I was (past subordinate)">naykama</span>
@@ -684,10 +807,8 @@
       </div>
     </div>
 
-    <div class="date-heading">February 17, 2026</div>
 
-    <div class="card" data-student="Aron">
-      <div class="card-meta">Aron · Feb 17</div>
+    <div class="card">
       <div class="quechua-line">
         <span class="m" data-cat="noun-root" data-gloss="tayta: father/dad">Tayta</span><span class="m" data-cat="possessive" data-gloss="-y: 1st person possessive (my)">y</span>
         <span class="m" data-cat="verb-root" data-gloss="ni-: to say">ni</span><span class="m" data-cat="verb-aspect" data-gloss="-ran: past tense (said)">ran</span>
@@ -723,10 +844,8 @@
       </div>
     </div>
 
-    <div class="date-heading">February 18, 2026</div>
 
-    <div class="card" data-student="Aron">
-      <div class="card-meta">Aron · Feb 18</div>
+    <div class="card">
       <div class="quechua-line">
         <span class="m" data-cat="noun-root" data-gloss="ñoqa: I">Ñoqa</span><span class="m" data-cat="verb-aspect" data-gloss="-qa: topic marker">qa</span>
         <span class="m" data-cat="verb-root" data-gloss="apa-: to bring/carry">apa</span><span class="m" data-cat="verb-aspect" data-gloss="-saq: future 1st person">saq</span>
@@ -762,10 +881,7 @@
       </div>
     </div>
 
-    <div class="date-heading">February 17, 2026 — Dafne</div>
-
-    <div class="card" data-student="Dafne">
-      <div class="card-meta">Dafne · Feb 17, example 1</div>
+    <div class="card">
       <div class="quechua-line">
         <span class="m" data-cat="noun-root" data-gloss="Looneytunecha: Looney Tunes (+ affective diminutive -cha)">Looneytuneча</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="verb-aspect" data-gloss="-q: genitive/of">q</span>
         <span class="m" data-cat="noun-root" data-gloss="credito: credits">credito</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="verb-aspect" data-gloss="-n: genitive / of">n</span><span class="m" data-cat="pi" data-gloss="-pi: locative (in)">pi</span>,
@@ -797,16 +913,14 @@
       </div>
     </div>
 
-    <div class="date-heading">March 2, 2026</div>
 
-    <div class="card" data-student="Harmony">
-      <div class="card-meta">Harmony · Mar 2</div>
+    <div class="card">
       <div class="quechua-line">
         <span class="m" data-cat="noun-root" data-gloss="qayna: yesterday / last (past time)">Qayna</span>
         <span class="m" data-cat="noun-root" data-gloss="p'unchay: day">p'unchay</span>,
         <span class="m" data-cat="noun-root" data-gloss="mama: mother">mama</span><span class="m" data-cat="possessive" data-gloss="-y: my (1st person possessive)">y</span>
         <span class="m" data-cat="verb-root" data-gloss="ni-: to say">ni</span><span class="m" data-cat="verb-aspect" data-gloss="-ran: past tense (3rd person)">ran</span>:
-        "<span class="m" data-cat="noun-root" data-gloss="Armonía (name) + -cha affective">Armoníacha</span>
+        "<span class="m" data-cat="noun-root" data-gloss="[name] + -cha affective">Armoníacha</span>
         <span class="m" data-cat="verb-root" data-gloss="rima-: to speak">rima</span><span class="m" data-cat="verb-aspect" data-gloss="-y: imperative (2nd sg: speak!)">y</span>
         <span class="m" data-cat="noun-root" data-gloss="Runasimi: Quechua language (lit: people's mouth)">Runasimi</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>.
         <span class="m" data-cat="verb-root" data-gloss="ati-: to be able to / can">Atin</span><span class="m" data-cat="verb-aspect" data-gloss="-ki: 2nd person singular">ki</span><span class="m" data-cat="verb-aspect" data-gloss="-chu: interrogative / negation particle">chu</span>?"
@@ -819,7 +933,7 @@
           mother
           <span class="m" data-cat="verb-aspect" data-gloss="-ran: past">said</span>:
           "Hey
-          <span class="m" data-cat="cha" data-gloss="-cha: affective">Harmony</span>,
+          <span class="m" data-cat="cha" data-gloss="-cha: affective">[name]</span>,
           <span class="m" data-cat="verb-aspect" data-gloss="-y: imperative">speak</span>
           in
           <span class="m" data-cat="ta" data-gloss="-ta: direct object">Quechua</span>.
@@ -833,7 +947,7 @@
           mamá
           <span class="m" data-cat="verb-aspect" data-gloss="-ran: pasado">dijo</span>:
           "Ey
-          <span class="m" data-cat="cha" data-gloss="-cha: afectivo">Armonía</span>,
+          <span class="m" data-cat="cha" data-gloss="-cha: afectivo">[nombre]</span>,
           <span class="m" data-cat="verb-aspect" data-gloss="-y: imperativo">habla</span>
           en
           <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">quechua</span>.
@@ -843,50 +957,793 @@
       </div>
     </div>
 
-    <div class="date-heading">January 28, 2026</div>
 
-    <div class="card" data-student="Brigitt">
-      <div class="card-meta">Brigitt · Jan 28</div>
+    <!-- ── SENTENCE 9: brothers / Levain Bakery ── -->
+    <div class="card">
       <div class="quechua-line">
-        <span class="m" data-cat="noun-root" data-gloss="qayna: last (past)">Qayna</span>
-        <span class="m" data-cat="noun-root" data-gloss="viernes: Friday">viernes</span><span class="m" data-cat="pi" data-gloss="-pi: locative (on)">pi</span>,
-        <span class="m" data-cat="noun-root" data-gloss="justicia: justice">justicia</span>
-        <span class="m" data-cat="noun-root" data-gloss="departamento: department">departamento</span>
-        <span class="m" data-cat="verb-root" data-gloss="qhawa-: to show/display">qhawa</span><span class="m" data-cat="verb-aspect" data-gloss="-chi: causative (make someone see)">chi</span><span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect">sqa</span>
-        <span class="m" data-cat="noun-root" data-gloss="llaqtamasi: countrypeople / fellow citizens">llaqtamasi</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="man" data-gloss="-man: allative (to)">man</span>
-        <span class="m" data-cat="noun-root" data-gloss="kinsa unu: 3 million">kinsa unu</span>
-        <span class="m" data-cat="noun-root" data-gloss="pagina: page">pagina</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="ta" data-gloss="-ta: accusative">ta</span>,
-        <span class="m" data-cat="noun-root" data-gloss="Epstein (name)">Epstein</span><span class="m" data-cat="possessive" data-gloss="-pa: genitive / 's (of)">pa</span>
-        <span class="m" data-cat="noun-root" data-gloss="archivo: file/archive">archivo</span><span class="m" data-cat="verb-aspect" data-gloss="-n: genitive">n</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="manta" data-gloss="-manta: from">manta</span>.
+        <span class="m" data-cat="noun-root" data-gloss="tura: brother (male's brother)">Tura</span><span class="m" data-cat="possessive" data-gloss="-y: my (1st person possessive)">y</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span>
+        <span class="m" data-cat="noun-root" data-gloss="Peru: Peru">Peru</span><span class="m" data-cat="manta" data-gloss="-manta: from">manta</span>
+        <span class="m" data-cat="noun-root" data-gloss="nuevayork: New York">nuevayork</span><span class="m" data-cat="kama" data-gloss="-kama: all the way to">kama</span>
+        <span class="m" data-cat="verb-root" data-gloss="watuku-: to visit">watuku</span><span class="m" data-cat="verb-aspect" data-gloss="-ranku: past tense 3rd person plural">ranku</span>
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: me (1st person object)">noqa</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>.
+        <span class="m" data-cat="noun-root" data-gloss="Levainbakery: Levain Bakery">Levainbakery</span><span class="m" data-cat="man" data-gloss="-man: allative (to/toward)">man</span>
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: I">ñoqa</span>
+        <span class="m" data-cat="verb-root" data-gloss="ri-: to go">ri</span><span class="m" data-cat="verb-aspect" data-gloss="-rqani: past 1st person">rqani</span>
+        <span class="m" data-cat="noun-root" data-gloss="iskay: two">iskay</span>
+        <span class="m" data-cat="noun-root" data-gloss="tura: brother">tura</span><span class="m" data-cat="possessive" data-gloss="-y: my">y</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="wan" data-gloss="-wan: with (comitative)">wan</span>.
+        <span class="m" data-cat="noun-root" data-gloss="pay: they (3rd person plural)">Pay</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span>
+        <span class="m" data-cat="noun-root" data-gloss="soqta: six">soqta</span>
+        <span class="m" data-cat="noun-root" data-gloss="galleta: cookie">galleta</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>
+        <span class="m" data-cat="verb-root" data-gloss="mañaku-: to order/request">mañaku</span><span class="m" data-cat="verb-aspect" data-gloss="-rqanku: past 3rd person plural">rqanku</span>,
+        <span class="m" data-cat="noun-root" data-gloss="iskaynin: both">iskaynin</span>
+        <span class="m" data-cat="noun-root" data-gloss="chay: those / these (demonstrative)">chay</span>
+        <span class="m" data-cat="noun-root" data-gloss="galleta: cookie">galleta</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="ta" data-gloss="-ta: accusative">ta</span>
+        <span class="m" data-cat="verb-root" data-gloss="mihu-: to eat">mihu</span><span class="m" data-cat="verb-aspect" data-gloss="-ranku: past 3rd person plural">ranku</span>
+        <span class="m" data-cat="verb-root" data-gloss="mana ati-: to be unable to">mana ati</span><span class="m" data-cat="verb-aspect" data-gloss="-nankukama: until they could no more (subordinate)">nankukama</span>.
       </div>
       <div class="trans">
         <span class="t-line">
           <span class="lang-label">EN</span>
-          Last Friday, the Justice Department had
-          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect (had done)">shown</span>
-          to my fellow
-          <span class="m" data-cat="man" data-gloss="-man: to">countrymen</span>
-          3 million
-          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">pages</span>
-          <span class="m" data-cat="ta" data-gloss="-ta: direct object">[DO]</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: my">My</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">brothers</span>
           <span class="m" data-cat="manta" data-gloss="-manta: from">from</span>
-          Epstein's
-          <span class="m" data-cat="possessive" data-gloss="-pa: genitive/of">'s</span>
-          files.
+          Peru
+          <span class="m" data-cat="kama" data-gloss="-kama: all the way to">to</span>
+          New York
+          <span class="m" data-cat="verb-aspect" data-gloss="-ranku: past 3rd pl">visited</span>
+          me
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">[DO]</span>.
+          I
+          <span class="m" data-cat="verb-aspect" data-gloss="-rqani: past 1st sg">went</span>
+          to Levain Bakery
+          <span class="m" data-cat="man" data-gloss="-man: to">[to]</span>
+          <span class="m" data-cat="wan" data-gloss="-wan: with">with</span>
+          my two brothers. They
+          <span class="m" data-cat="verb-aspect" data-gloss="-rqanku: past 3rd pl">ordered</span>
+          six
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">cookies</span>
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">[DO]</span>;
+          both
+          <span class="m" data-cat="verb-aspect" data-gloss="-ranku: past 3rd pl">ate</span>
+          those cookies until they
+          <span class="m" data-cat="verb-aspect" data-gloss="-nankukama: until they could no more">couldn't anymore</span>.
         </span>
         <span class="t-line">
           <span class="lang-label">ES</span>
-          El viernes pasado, el Departamento de Justicia le había
-          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: pasado perfecto">mostrado</span>
-          a mis
-          <span class="m" data-cat="man" data-gloss="-man: a/hacia">compatriotas</span>
-          3 millones de
-          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">páginas</span>
-          <span class="m" data-cat="manta" data-gloss="-manta: de/desde">de</span>
-          los archivos de Epstein.
+          <span class="m" data-cat="possessive" data-gloss="-y: mi/s">Mis</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">hermanos</span>
+          <span class="m" data-cat="manta" data-gloss="-manta: desde">desde</span>
+          Perú
+          <span class="m" data-cat="kama" data-gloss="-kama: hasta">hasta</span>
+          Nueva York me
+          <span class="m" data-cat="verb-aspect" data-gloss="-ranku: pasado 3era pl">visitaron</span>.
+          Yo
+          <span class="m" data-cat="verb-aspect" data-gloss="-rqani: pasado 1era sg">fui</span>
+          a Levain Bakery
+          <span class="m" data-cat="man" data-gloss="-man: a">[a]</span>
+          <span class="m" data-cat="wan" data-gloss="-wan: con">con</span>
+          mis dos hermanos. Ellos
+          <span class="m" data-cat="verb-aspect" data-gloss="-rqanku: pasado 3era pl">pidieron</span>
+          seis
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">galletas</span>
+          <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">[OD]</span>;
+          ambos
+          <span class="m" data-cat="verb-aspect" data-gloss="-ranku: pasado 3era pl">comieron</span>
+          esas galletas hasta
+          <span class="m" data-cat="verb-aspect" data-gloss="-nankukama: hasta no poder más">más no poder</span>.
         </span>
       </div>
     </div>
+
+    <!-- ── SENTENCE 10: why did you say don't come ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="ima: what / why (interrogative)">Ima</span>
+        <span class="m" data-cat="rayku" data-gloss="-rayku: because of / why">rayku</span>
+        <span class="m" data-cat="verb-root" data-gloss="ni-: to say">ni</span><span class="m" data-cat="verb-aspect" data-gloss="-sha: progressive aspect">sha</span><span class="m" data-cat="verb-aspect" data-gloss="-ranki: past 2nd person (you were saying)">ranki</span>
+        "<span class="m" data-cat="verb-root" data-gloss="ama + hamu-: don't come (prohibitive + verb)">Ama hamuchi</span><span class="m" data-cat="verb-aspect" data-gloss="-s-chu: reported prohibitive 3rd person">schu</span>"
+        <span class="m" data-cat="noun-root" data-gloss="ayullu: family / community">ayullu</span><span class="m" data-cat="possessive" data-gloss="-y: my (1st person possessive)">y</span><span class="m" data-cat="man" data-gloss="-man: to / toward (allative)">man</span>?
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          <span class="m" data-cat="rayku" data-gloss="-rayku: why">Why</span>
+          did
+          <span class="m" data-cat="verb-aspect" data-gloss="-ranki: past 2nd person">you say</span>
+          "Don't come"
+          to
+          <span class="m" data-cat="possessive" data-gloss="-y: my">my</span>
+          <span class="m" data-cat="man" data-gloss="-man: to">family</span>?
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          ¿
+          <span class="m" data-cat="rayku" data-gloss="-rayku: por qué">Por qué</span>
+          le
+          <span class="m" data-cat="verb-aspect" data-gloss="-ranki: pasado 2da persona">dijiste</span>
+          "No vengas"
+          a
+          <span class="m" data-cat="possessive" data-gloss="-y: mi">mi</span>
+          <span class="m" data-cat="man" data-gloss="-man: a/hacia">familia</span>?
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 11: 28 pounds of corn ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: I">Ñoqa</span>
+        <span class="m" data-cat="verb-root" data-gloss="muna-: to want">muna</span><span class="m" data-cat="verb-aspect" data-gloss="-ni: 1st person present">ni</span>
+        <span class="m" data-cat="noun-root" data-gloss="iskay chunka pusaqniyoq: twenty-eight (28)">iskay chunka pusaqniyoq</span>
+        <span class="m" data-cat="noun-root" data-gloss="libra: pound (unit of weight)">libra</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="sara: corn / maize">sara</span><span class="m" data-cat="manta" data-gloss="-manta: from / of (partitive)">manta</span>.
+        <span class="m" data-cat="noun-root" data-gloss="chaymanta: after that / then">Chaymanta</span>,
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: I">ñoqa</span>
+        <span class="m" data-cat="verb-root" data-gloss="puri-: to walk / travel">puri</span><span class="m" data-cat="verb-aspect" data-gloss="-saq: future 1st person">saq</span>
+        <span class="m" data-cat="noun-root" data-gloss="marketa: market">marketa</span><span class="m" data-cat="manta" data-gloss="-manta: from">manta</span>,
+        <span class="m" data-cat="noun-root" data-gloss="wasi: home / house">wasi</span><span class="m" data-cat="possessive" data-gloss="-y: my (1st person possessive)">y</span><span class="m" data-cat="kama" data-gloss="-kama: all the way to">kama</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          I
+          <span class="m" data-cat="verb-aspect" data-gloss="-ni: 1st person present">want</span>
+          28
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">pounds</span>
+          <span class="m" data-cat="manta" data-gloss="-manta: of">of</span>
+          corn. Then, I will
+          <span class="m" data-cat="verb-aspect" data-gloss="-saq: future 1st person">walk</span>
+          <span class="m" data-cat="manta" data-gloss="-manta: from">from</span>
+          the market all the way
+          <span class="m" data-cat="kama" data-gloss="-kama: all the way to">to</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: my">my</span>
+          home.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Yo
+          <span class="m" data-cat="verb-aspect" data-gloss="-ni: 1era persona presente">quiero</span>
+          veintiocho
+          <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">libras</span>
+          <span class="m" data-cat="manta" data-gloss="-manta: de">de</span>
+          maíz. Luego de eso, yo
+          <span class="m" data-cat="verb-aspect" data-gloss="-saq: futuro 1era persona">caminaré</span>
+          <span class="m" data-cat="manta" data-gloss="-manta: desde">del</span>
+          mercado hasta
+          <span class="m" data-cat="kama" data-gloss="-kama: hasta">mi</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: mi">casa</span>.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 12: smelly people in the gym ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="verb-root" data-gloss="asna-: to smell bad / to stink">Asna</span><span class="m" data-cat="verb-aspect" data-gloss="-q: agentive (one who does)">q</span><span class="m" data-cat="kama" data-gloss="-kama: among / to the extent of (here: among the smelly ones)">kama</span>
+        <span class="m" data-cat="verb-root" data-gloss="ka-: to be">ka</span><span class="m" data-cat="verb-aspect" data-gloss="-shanku: 3rd person plural progressive">shanku</span>
+        <span class="m" data-cat="noun-root" data-gloss="gymnasia: gymnasium">gymnasia</span><span class="m" data-cat="pi" data-gloss="-pi: locative (in, at)">pi</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          Among the
+          <span class="m" data-cat="verb-aspect" data-gloss="-q: agentive">smelly</span>
+          ones they
+          <span class="m" data-cat="verb-aspect" data-gloss="-shanku: 3rd pl progressive">are</span>
+          <span class="m" data-cat="pi" data-gloss="-pi: locative">in</span>
+          the gymnasium.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Entre los
+          <span class="m" data-cat="verb-aspect" data-gloss="-q: agentivo">apestosos</span>
+          están
+          <span class="m" data-cat="pi" data-gloss="-pi: locativo">en</span>
+          el gimnasio.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 13: each student write a composition ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="sapanka: each / every one (distributive)">Sapanka</span>
+        <span class="m" data-cat="noun-root" data-gloss="estudiante: student">estudiante</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span>
+        <span class="m" data-cat="verb-root" data-gloss="quelqa-: to write">quelqa</span><span class="m" data-cat="verb-aspect" data-gloss="-chu: indirect command (let them / tell them to)">chu</span><span class="m" data-cat="verb-aspect" data-gloss="-nku: 3rd person plural subject">nku</span>
+        <span class="m" data-cat="noun-root" data-gloss="composición: composition">composición</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="paqarin: tomorrow">paqarin</span><span class="m" data-cat="paq" data-gloss="-paq: for / benefactive">paq</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          (Tell them that)
+          <span class="m" data-cat="noun-root" data-gloss="sapanka: each">each</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">student</span>
+          <span class="m" data-cat="verb-aspect" data-gloss="-chunку: indirect command">write</span>
+          a
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">composition</span>
+          <span class="m" data-cat="paq" data-gloss="-paq: for">for</span>
+          tomorrow.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          (Díganles que)
+          <span class="m" data-cat="noun-root" data-gloss="sapanka: cada">cada</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">estudiante</span>
+          <span class="m" data-cat="verb-aspect" data-gloss="-chunku: comando indirecto">escriba</span>
+          una
+          <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">composición</span>
+          <span class="m" data-cat="paq" data-gloss="-paq: para">para</span>
+          mañana.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 14: you will leave me tomorrow ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="qan: you (2nd person singular)">Qan</span>
+        <span class="m" data-cat="verb-root" data-gloss="saqe-: to leave / abandon">saqe</span><span class="m" data-cat="verb-aspect" data-gloss="-nki: future 2nd person singular (you will)">nki</span>
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: me (1st person)">ñoqa</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="paqarin: tomorrow">paqarin</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          You
+          <span class="m" data-cat="verb-aspect" data-gloss="-nki: future 2nd person">will leave</span>
+          <span class="m" data-cat="possessive" data-gloss="-ta: direct object">me</span>
+          tomorrow.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Tú
+          <span class="m" data-cat="verb-aspect" data-gloss="-nki: futuro 2da persona">me dejarás</span>
+          <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">[a mí]</span>
+          mañana.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 15: born with two legs ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="llaqa: almost / nearly">Llaqa</span>
+        <span class="m" data-cat="noun-root" data-gloss="sapanka: each / every">sapanka</span>
+        <span class="m" data-cat="noun-root" data-gloss="runa: person / human being">runa</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span>
+        <span class="m" data-cat="noun-root" data-gloss="paqarin-chis: we are born / people are born (inchoative)">paqarin</span><span class="m" data-cat="verb-aspect" data-gloss="-chis: inclusive 1st person plural (we all)">chis</span>
+        <span class="m" data-cat="noun-root" data-gloss="iskay: two">iskay</span>
+        <span class="m" data-cat="noun-root" data-gloss="chaka: leg">chaka</span><span class="m" data-cat="verb-aspect" data-gloss="-yoq: having (possessive adjective)">yoq</span>,
+        <span class="m" data-cat="noun-root" data-gloss="iskay: two">iskay</span>
+        <span class="m" data-cat="noun-root" data-gloss="chaki: foot">chaki</span><span class="m" data-cat="verb-aspect" data-gloss="-yoq: having">yoq</span>
+        <span class="m" data-cat="reportative" data-gloss="-ima: and so on / etcetera">ima</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          Almost
+          <span class="m" data-cat="noun-root" data-gloss="sapanka: every">every</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">person</span>
+          is born with
+          <span class="m" data-cat="noun-root" data-gloss="iskay: two">two</span>
+          <span class="m" data-cat="verb-aspect" data-gloss="-yoq: having">legs</span>
+          and
+          <span class="m" data-cat="noun-root" data-gloss="iskay: two">two</span>
+          <span class="m" data-cat="verb-aspect" data-gloss="-yoq: having">feet</span>.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Casi
+          <span class="m" data-cat="noun-root" data-gloss="sapanka: cada">cada</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">persona</span>
+          nace con
+          <span class="m" data-cat="noun-root" data-gloss="iskay: dos">dos</span>
+          <span class="m" data-cat="verb-aspect" data-gloss="-yoq: que tiene">piernas</span>
+          y
+          <span class="m" data-cat="noun-root" data-gloss="iskay: dos">dos</span>
+          <span class="m" data-cat="verb-aspect" data-gloss="-yoq: que tiene">pies</span>.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 16: last summer, went to Ecuador via Colombia ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="qayna: last (past)">Qayna</span>
+        <span class="m" data-cat="noun-root" data-gloss="verano: summer">verano</span><span class="m" data-cat="pi" data-gloss="-pi: locative (in, during)">pi</span>,
+        <span class="m" data-cat="verb-root" data-gloss="ri-: to go">ri</span><span class="m" data-cat="verb-aspect" data-gloss="-rani: past 1st person (I went)">rani</span>
+        <span class="m" data-cat="noun-root" data-gloss="Ecuador: Ecuador">Ecuador</span><span class="m" data-cat="man" data-gloss="-man: allative (to/toward)">man</span>
+        <span class="m" data-cat="noun-root" data-gloss="avión: airplane">avión</span><span class="m" data-cat="pi" data-gloss="-pi: locative (in / on)">pi</span>
+        <span class="m" data-cat="noun-root" data-gloss="Colombia: Colombia">Colombia</span><span class="m" data-cat="noun-root" data-gloss="-nta: via / through (path)">nta</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          Last
+          <span class="m" data-cat="pi" data-gloss="-pi: locative (in, during)">summer</span>,
+          I
+          <span class="m" data-cat="verb-aspect" data-gloss="-rani: past 1st person">went</span>
+          <span class="m" data-cat="man" data-gloss="-man: to">to</span>
+          Ecuador
+          <span class="m" data-cat="pi" data-gloss="-pi: on">on</span>
+          the plane
+          via
+          Colombia.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          El
+          <span class="m" data-cat="pi" data-gloss="-pi: locativo">verano</span>
+          pasado,
+          <span class="m" data-cat="verb-aspect" data-gloss="-rani: pasado 1era persona">fui</span>
+          a
+          <span class="m" data-cat="man" data-gloss="-man: a/hacia">Ecuador</span>
+          <span class="m" data-cat="pi" data-gloss="-pi: en">en</span>
+          avión vía
+          Colombia.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 17: young man will work / $250 on table / return with partner ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="huk: one / a (indefinite article)">Huk</span>
+        <span class="m" data-cat="noun-root" data-gloss="wayna: young man">wayna</span>
+        <span class="m" data-cat="verb-root" data-gloss="llank'a-: to work">llank'a</span><span class="m" data-cat="verb-aspect" data-gloss="-nqa: future 3rd person (he/she will)">nqa</span>
+        <span class="m" data-cat="noun-root" data-gloss="qan: you (2nd person)">qan</span><span class="m" data-cat="paq" data-gloss="-paq: for / benefactive">paq</span>
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: I / me">ñoqa</span><span class="m" data-cat="possessive" data-gloss="-q: genitive (my, instead of me)">q</span>
+        <span class="m" data-cat="verb-root" data-gloss="rantiy-: to substitute / instead of">rantiy</span><span class="m" data-cat="ta" data-gloss="-ta: accusative">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="paqarin: tomorrow">paqarin</span>.
+        <span class="m" data-cat="noun-root" data-gloss="pay: he / she (3rd person)">Pay</span>
+        <span class="m" data-cat="verb-root" data-gloss="llank'a-: to work">llank'a</span><span class="m" data-cat="verb-aspect" data-gloss="-nqa: future 3rd person">nqa</span>
+        <span class="m" data-cat="noun-root" data-gloss="wasi: house">wasi</span><span class="m" data-cat="possessive" data-gloss="-y: my">y</span><span class="m" data-cat="possessive" data-gloss="-pa: genitive (of)">pa</span>
+        <span class="m" data-cat="noun-root" data-gloss="qhepa: behind / back">qhepa</span><span class="m" data-cat="pi" data-gloss="-pi: locative (at, behind)">pi</span>.
+        <span class="m" data-cat="verb-root" data-gloss="saqe-: to leave">Saqe</span><span class="m" data-cat="verb-aspect" data-gloss="-rani: past 1st person">rani</span>
+        <span class="m" data-cat="noun-root" data-gloss="iskay pachak pisqa chunka: two hundred fifty (250)">iskay pachak pisqa chunka</span>
+        <span class="m" data-cat="noun-root" data-gloss="dolares: dollars">dolares</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="chay: that (demonstrative)">chay</span>
+        <span class="m" data-cat="noun-root" data-gloss="mesa: table">mesa</span><span class="m" data-cat="possessive" data-gloss="-q: genitive">q</span>
+        <span class="m" data-cat="noun-root" data-gloss="chawpi: center / middle">chawpi</span><span class="m" data-cat="pi" data-gloss="-pi: locative (on)">pi</span>.
+        <span class="m" data-cat="verb-root" data-gloss="kuti-: to return">Kuti</span><span class="m" data-cat="verb-aspect" data-gloss="-saq: future 1st person">saq</span>
+        <span class="m" data-cat="noun-root" data-gloss="minchha: the following / next">minchha</span>
+        <span class="m" data-cat="noun-root" data-gloss="semana: week">semana</span><span class="m" data-cat="ta" data-gloss="-ta: accusative (next week)">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="yana: partner / loved one">yana</span><span class="m" data-cat="possessive" data-gloss="-y: my">y</span><span class="m" data-cat="wan" data-gloss="-wan: with (comitative)">wan</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          A young man will
+          <span class="m" data-cat="verb-aspect" data-gloss="-nqa: future 3rd person">work</span>
+          <span class="m" data-cat="paq" data-gloss="-paq: for">for</span>
+          you tomorrow instead of
+          <span class="m" data-cat="possessive" data-gloss="-q: genitive">me</span>.
+          He will work
+          <span class="m" data-cat="pi" data-gloss="-pi: locative">behind</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: my">my</span>
+          house. I
+          <span class="m" data-cat="verb-aspect" data-gloss="-rani: past 1st person">left</span>
+          $250
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">[DO]</span>
+          <span class="m" data-cat="pi" data-gloss="-pi: locative (on)">on</span>
+          the center of that table. I will
+          <span class="m" data-cat="verb-aspect" data-gloss="-saq: future 1st person">return</span>
+          next week
+          <span class="m" data-cat="wan" data-gloss="-wan: with">with</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: my">my</span>
+          partner.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Un joven
+          <span class="m" data-cat="verb-aspect" data-gloss="-nqa: futuro 3era persona">trabajará</span>
+          <span class="m" data-cat="paq" data-gloss="-paq: para">para</span>
+          ti mañana en lugar de
+          <span class="m" data-cat="possessive" data-gloss="-q: genitivo">mí</span>.
+          Él trabajará
+          <span class="m" data-cat="pi" data-gloss="-pi: locativo">detrás</span>
+          de
+          <span class="m" data-cat="possessive" data-gloss="-y: mi">mi</span>
+          casa. Yo
+          <span class="m" data-cat="verb-aspect" data-gloss="-rani: pasado 1era persona">dejé</span>
+          $250
+          <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">[OD]</span>
+          <span class="m" data-cat="pi" data-gloss="-pi: locativo (en)">en</span>
+          el centro de esa mesa. Yo
+          <span class="m" data-cat="verb-aspect" data-gloss="-saq: futuro 1era persona">regresaré</span>
+          la semana siguiente
+          <span class="m" data-cat="wan" data-gloss="-wan: con">con</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: mi">mi</span>
+          pareja.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 18: children playing / Sophia go to window ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="erqe: child">Erqe</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="kama" data-gloss="-kama: among themselves / to the extent of (reflexive distributive)">kama</span>
+        <span class="m" data-cat="verb-root" data-gloss="pukllas-: to play">pukllas</span><span class="m" data-cat="verb-aspect" data-gloss="-hanku: 3rd person plural progressive">hanku</span>,
+        <span class="m" data-cat="noun-root" data-gloss="pay-kuna: they (3rd person plural)">pay</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span>
+        <span class="m" data-cat="noun-root" data-gloss="mana: not (negation)">mana</span>
+        <span class="m" data-cat="verb-root" data-gloss="uyari-: to listen / hear">uyari</span><span class="m" data-cat="verb-aspect" data-gloss="-shanku: 3rd person plural progressive">shanku</span><span class="m" data-cat="verb-aspect" data-gloss="-chu: negation particle">chu</span>
+        <span class="m" data-cat="noun-root" data-gloss="ñoqanchis: us / we (inclusive)">ñoqanchis</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>.
+        <span class="m" data-cat="noun-root" data-gloss="[name] + -cha affective diminutive">[name]cha</span>,
+        <span class="m" data-cat="verb-root" data-gloss="ri-: to go">ri</span>
+        <span class="m" data-cat="noun-root" data-gloss="ventana: window">ventana</span><span class="m" data-cat="man" data-gloss="-man: allative (to/toward)">man</span>.
+        <span class="m" data-cat="noun-root" data-gloss="chayqa: then / so (discourse connector)">Chayqa</span>,
+        <span class="m" data-cat="verb-root" data-gloss="ni-: to say / tell (causative of speech)">ni</span>
+        <span class="m" data-cat="noun-root" data-gloss="erqe: child">erqe</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="ta" data-gloss="-ta: accusative">ta</span>
+        <span class="m" data-cat="verb-root" data-gloss="hayku-: to enter / come in">hayku</span><span class="m" data-cat="verb-aspect" data-gloss="-munku: indirect command 3rd plural (tell them to come in)">munku</span>
+        <span class="m" data-cat="noun-root" data-gloss="qhepa: back / behind">qhepa</span>
+        <span class="m" data-cat="noun-root" data-gloss="punku: door">punku</span><span class="m" data-cat="noun-root" data-gloss="-nta: through / via">nta</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          The
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">children</span>
+          are
+          <span class="m" data-cat="verb-aspect" data-gloss="-hanku: 3rd pl progressive">playing</span>
+          among themselves; they are
+          <span class="m" data-cat="verb-aspect" data-gloss="-shanku-chu: 3rd pl progressive negative">not listening</span>
+          to
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">us</span>.
+          [name]
+          <span class="m" data-cat="cha" data-gloss="-cha: affective diminutive">(dear)</span>,
+          go
+          <span class="m" data-cat="man" data-gloss="-man: to">to</span>
+          the window. Then, tell the
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">children</span>
+          to come in through the back door.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Los
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">niños</span>
+          están
+          <span class="m" data-cat="verb-aspect" data-gloss="-hanku: 3era pl progresivo">jugando</span>
+          entre ellos; no nos
+          <span class="m" data-cat="verb-aspect" data-gloss="-shanku-chu: 3era pl negativo">están escuchando</span>.
+          [nombre]
+          <span class="m" data-cat="cha" data-gloss="-cha: diminutivo afectivo">(querida)</span>,
+          ve
+          <span class="m" data-cat="man" data-gloss="-man: hacia">a</span>
+          la ventana. Luego, diles a los
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">niños</span>
+          que entren por la puerta de atrás.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 19: heartbreak / two-faced traitor ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="chinpay: in front of / across from">Chinpay</span><span class="m" data-cat="pi" data-gloss="-pi: locative (in front of me)">pi</span>
+        <span class="m" data-cat="verb-root" data-gloss="ka-: to be">ka</span><span class="m" data-cat="verb-aspect" data-gloss="-sharan: past progressive (was being)">sharan</span>
+        <span class="m" data-cat="noun-root" data-gloss="huk: one / a (indefinite)">huk</span>
+        <span class="m" data-cat="noun-root" data-gloss="iska: two">iska</span>
+        <span class="m" data-cat="noun-root" data-gloss="uya: face">uya</span>.
+        <span class="m" data-cat="noun-root" data-gloss="kay: this (demonstrative)">Kay</span>
+        <span class="m" data-cat="noun-root" data-gloss="sumaq: beautiful / handsome">sumaq</span>
+        <span class="m" data-cat="noun-root" data-gloss="wayna: young man">wayna</span>
+        <span class="m" data-cat="verb-root" data-gloss="rikhari-: to wake up">rikhari</span><span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect">sqa</span>
+        <span class="m" data-cat="noun-root" data-gloss="qayna: last / previous">qayna</span>
+        <span class="m" data-cat="noun-root" data-gloss="tuta: night">tuta</span>
+        <span class="m" data-cat="verb-root" data-gloss="puñu-: to sleep">puñu</span><span class="m" data-cat="verb-aspect" data-gloss="-shanaykama: while I was sleeping (subordinate)">shanaykama</span>.
+        <span class="m" data-cat="noun-root" data-gloss="chay: that (demonstrative)">Chay</span>
+        <span class="m" data-cat="noun-root" data-gloss="tuta: night">tuta</span><span class="m" data-cat="pi" data-gloss="-pi: locative (at night)">pi</span>,
+        <span class="m" data-cat="noun-root" data-gloss="pay: he / she (3rd person)">pay</span>
+        <span class="m" data-cat="verb-root" data-gloss="yacha-: to know">yacha</span><span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect (had known)">sqa</span>
+        <span class="m" data-cat="noun-root" data-gloss="ima: what (interrogative)">ima</span>
+        <span class="m" data-cat="verb-root" data-gloss="ruwa-: to do">ruwa</span><span class="m" data-cat="verb-aspect" data-gloss="-yta: infinitive / direct object (what to do)">yta</span>.
+        <span class="m" data-cat="noun-root" data-gloss="chay: that / for that">Chay</span>
+        <span class="m" data-cat="rayku" data-gloss="-rayku: because of / that's why">rayku</span>
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: my">ñoqa</span><span class="m" data-cat="possessive" data-gloss="-q: genitive (my)">q</span>
+        <span class="m" data-cat="noun-root" data-gloss="sonqo: heart">sonqo</span><span class="m" data-cat="cha" data-gloss="-cha: affective diminutive (my tender/dear heart)">cha</span><span class="m" data-cat="possessive" data-gloss="-y: my (1st person possessive)">y</span>
+        <span class="m" data-cat="verb-root" data-gloss="nana-: to hurt / be in pain">nana</span><span class="m" data-cat="verb-aspect" data-gloss="-shan: 3rd person progressive (is hurting)">shan</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          In front of
+          <span class="m" data-cat="pi" data-gloss="-pi: locative">me</span>
+          was a two-faced traitor. This handsome young man had
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect">woken up</span>
+          last night while I was
+          <span class="m" data-cat="verb-aspect" data-gloss="-shanaykama: while I was sleeping">sleeping</span>.
+          That night, he had
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect">known</span>
+          what he was going to do. That's
+          <span class="m" data-cat="rayku" data-gloss="-rayku: that's why">why</span>
+          my
+          <span class="m" data-cat="cha" data-gloss="-cha: affective (tender, dear)">tender</span>
+          heart
+          <span class="m" data-cat="verb-aspect" data-gloss="-shan: 3rd person progressive">is hurting</span>.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Frente a
+          <span class="m" data-cat="pi" data-gloss="-pi: locativo">mí</span>
+          había un traidor de dos caras. Este joven
+          <span class="m" data-cat="noun-root" data-gloss="sumaq: guapo">guapo</span>
+          se había
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: pasado perfecto">despertado</span>
+          la noche anterior mientras yo
+          <span class="m" data-cat="verb-aspect" data-gloss="-shanaykama: mientras dormía">dormía</span>.
+          Esa noche, él ya
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: pasado perfecto">sabía</span>
+          lo que iba a hacer. Por
+          <span class="m" data-cat="rayku" data-gloss="-rayku: por eso">eso</span>
+          mi
+          <span class="m" data-cat="cha" data-gloss="-cha: afectivo (tierno, querido)">tierno</span>
+          corazón
+          <span class="m" data-cat="verb-aspect" data-gloss="-shan: progresivo 3era persona">duele</span>.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 20: Carlos the telenovela ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="iskay: two">Iskay</span>
+        <span class="m" data-cat="noun-root" data-gloss="yana: partner / loved one">yana</span><span class="m" data-cat="verb-aspect" data-gloss="-yoq: having (with two partners)">yoq</span>
+        <span class="m" data-cat="verb-root" data-gloss="ka-: to be">kan</span>
+        <span class="m" data-cat="noun-root" data-gloss="Carlos: (character's name)">Carlos</span>,
+        <span class="m" data-cat="verb-root" data-gloss="saqe-: to leave / give">saqe</span><span class="m" data-cat="verb-aspect" data-gloss="-ran: past 3rd person">ran</span>
+        <span class="m" data-cat="noun-root" data-gloss="t'ika: flower">t'ika</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="huk: one / a (indefinite)">huk</span>
+        <span class="m" data-cat="noun-root" data-gloss="yana: partner">yana</span><span class="m" data-cat="possessive" data-gloss="-n: his/her (3rd person possessive)">n</span><span class="m" data-cat="man" data-gloss="-man: allative (to/toward)">man</span>,
+        <span class="m" data-cat="noun-root" data-gloss="sutin: her name is (3rd person name)">sutin</span>
+        <span class="m" data-cat="noun-root" data-gloss="Meredith: (character's name)">Meredith</span>,
+        <span class="m" data-cat="noun-root" data-gloss="hoq: another / other">hoq</span>
+        <span class="m" data-cat="noun-root" data-gloss="yana: partner">yana</span><span class="m" data-cat="possessive" data-gloss="-n: his/her">n</span><span class="m" data-cat="paq" data-gloss="-paq: for / intended for">paq</span>,
+        <span class="m" data-cat="noun-root" data-gloss="sutin: her name is">sutin</span>
+        <span class="m" data-cat="noun-root" data-gloss="Victoria: (character's name)">Victoria</span>.
+        <span class="m" data-cat="noun-root" data-gloss="Meredith: (character)">Meredith</span>,
+        <span class="m" data-cat="noun-root" data-gloss="Victoria: (character)">Victoria</span>
+        <span class="m" data-cat="reportative" data-gloss="-ima: and / also (additive)">ima</span>
+        <span class="m" data-cat="verb-root" data-gloss="ka-: to be">kaq</span><span class="m" data-cat="verb-aspect" data-gloss="-ku: reflexive / habitual">ku</span>
+        <span class="m" data-cat="noun-root" data-gloss="amiga: friend">amiga</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span>.
+        <span class="m" data-cat="noun-root" data-gloss="Carlos: (character)">Carlos</span>
+        <span class="m" data-cat="verb-root" data-gloss="chaya-: to arrive">chaya</span><span class="m" data-cat="verb-aspect" data-gloss="-qtin: subordinate past (when he arrived)">qtin</span>
+        <span class="m" data-cat="noun-root" data-gloss="Meredith: (character)">Meredith</span><span class="m" data-cat="possessive" data-gloss="-pa: genitive (Meredith's)">pa</span>
+        <span class="m" data-cat="noun-root" data-gloss="wasi: house">wasi</span><span class="m" data-cat="man" data-gloss="-man: to / toward">man</span>
+        <span class="m" data-cat="noun-root" data-gloss="chay: those / these">chay</span>
+        <span class="m" data-cat="noun-root" data-gloss="t'ika: flower">t'ika</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="wan" data-gloss="-wan: with (comitative)">wan</span>,
+        <span class="m" data-cat="noun-root" data-gloss="chaypi: there (locative demonstrative)">chaypi</span>
+        <span class="m" data-cat="noun-root" data-gloss="Meredith: (character)">Meredith</span>
+        <span class="m" data-cat="verb-root" data-gloss="phiña-: to be angry">phiña</span><span class="m" data-cat="verb-aspect" data-gloss="-sqa kasharan: past perfect (had been angry)">sqa kasharan</span>.
+        <span class="m" data-cat="verb-root" data-gloss="aysa-: to drag / pull">Aysa</span><span class="m" data-cat="verb-aspect" data-gloss="-ran: past 3rd person">ran</span>
+        <span class="m" data-cat="noun-root" data-gloss="Carlos: (character)">Carlos</span><span class="m" data-cat="ta" data-gloss="-ta: accusative">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="wasi: house">wasi</span><span class="m" data-cat="possessive" data-gloss="-pa: genitive">pa</span>
+        <span class="m" data-cat="noun-root" data-gloss="ukhu: interior / inside">ukhu</span><span class="m" data-cat="man" data-gloss="-man: toward (deep inside)">man</span>.
+        <span class="m" data-cat="noun-root" data-gloss="ñawpaq: at first / before">Ñawpaqta</span>
+        <span class="m" data-cat="noun-root" data-gloss="Carlos: (character)">Carlos</span>
+        <span class="m" data-cat="verb-root" data-gloss="llulla-: to lie">llulla</span><span class="m" data-cat="verb-aspect" data-gloss="-kuran: past reflexive 3rd person">kuran</span>,
+        <span class="m" data-cat="noun-root" data-gloss="ichaqa: but / however (conjunction)">ichaqa</span>
+        <span class="m" data-cat="noun-root" data-gloss="Meredith: (character)">Meredith</span>
+        <span class="m" data-cat="noun-root" data-gloss="llapa llapanta: absolutely everything">llapa llapanta</span>
+        <span class="m" data-cat="verb-root" data-gloss="yacha-: to know">yacha</span><span class="m" data-cat="verb-aspect" data-gloss="-ran: past 3rd person">ran</span>.
+        <span class="m" data-cat="verb-root" data-gloss="mana kacha-: to not release / hold tight">Mana kacha</span><span class="m" data-cat="verb-aspect" data-gloss="-ranchu: past 3rd person negative">ranchu</span>
+        <span class="m" data-cat="noun-root" data-gloss="Carlos: (character)">Carlos</span><span class="m" data-cat="ta" data-gloss="-ta: accusative">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="pay: he/she">pay</span>
+        <span class="m" data-cat="noun-root" data-gloss="kikin: himself / herself (reflexive)">kikin</span>
+        <span class="m" data-cat="verb-root" data-gloss="willa-: to tell / report">willa</span><span class="m" data-cat="verb-aspect" data-gloss="-nan: infinitive / until he told">nan</span><span class="m" data-cat="kama" data-gloss="-kama: until (limitative)">kama</span>
+        <span class="m" data-cat="noun-root" data-gloss="Victoria: (character)">Victoria</span><span class="m" data-cat="manta" data-gloss="-manta: about / from">manta</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          Carlos is
+          <span class="m" data-cat="verb-aspect" data-gloss="-yoq: having">with two partners</span>;
+          he
+          <span class="m" data-cat="verb-aspect" data-gloss="-ran: past 3rd person">left</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">flowers</span>
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">[DO]</span>
+          <span class="m" data-cat="man" data-gloss="-man: to">to</span>
+          one of
+          <span class="m" data-cat="possessive" data-gloss="-n: his">his</span>
+          partners, Meredith,
+          <span class="m" data-cat="paq" data-gloss="-paq: for">for</span>
+          the other, Victoria. Meredith and Victoria
+          <span class="m" data-cat="reportative" data-gloss="-ima: and also">used</span>
+          to be friends. When Carlos
+          <span class="m" data-cat="verb-aspect" data-gloss="-qtin: when he arrived">arrived</span>
+          at Meredith's house
+          <span class="m" data-cat="wan" data-gloss="-wan: with">with</span>
+          those flowers, Meredith had been
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa kasharan: past perfect">angry</span>.
+          She
+          <span class="m" data-cat="verb-aspect" data-gloss="-ran: past 3rd person">dragged</span>
+          Carlos
+          <span class="m" data-cat="man" data-gloss="-man: deep inside">to the inside</span>
+          of her house. At first Carlos
+          <span class="m" data-cat="verb-aspect" data-gloss="-kuran: past reflexive">lied</span>,
+          but Meredith knew
+          <span class="m" data-cat="noun-root" data-gloss="llapa llapanta: everything">everything</span>.
+          She did not
+          <span class="m" data-cat="verb-aspect" data-gloss="-ranchu: past negative">release</span>
+          Carlos
+          <span class="m" data-cat="kama" data-gloss="-kama: until">until</span>
+          he told her
+          <span class="m" data-cat="manta" data-gloss="-manta: about">about</span>
+          Victoria.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Carlos tiene
+          <span class="m" data-cat="verb-aspect" data-gloss="-yoq: con">dos parejas</span>;
+          le
+          <span class="m" data-cat="verb-aspect" data-gloss="-ran: pasado 3era persona">dejó</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">flores</span>
+          <span class="m" data-cat="man" data-gloss="-man: a/para">a</span>
+          una de
+          <span class="m" data-cat="possessive" data-gloss="-n: su">sus</span>
+          parejas, Meredith,
+          <span class="m" data-cat="paq" data-gloss="-paq: para">para</span>
+          la otra, Victoria. Meredith y Victoria
+          <span class="m" data-cat="reportative" data-gloss="-ima: y también">eran</span>
+          amigas. Cuando Carlos
+          <span class="m" data-cat="verb-aspect" data-gloss="-qtin: cuando llegó">llegó</span>
+          a la casa de Meredith
+          <span class="m" data-cat="wan" data-gloss="-wan: con">con</span>
+          esas flores, Meredith había estado
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa kasharan: pasado perfecto">enojada</span>.
+          Ella
+          <span class="m" data-cat="verb-aspect" data-gloss="-ran: pasado 3era persona">arrastró</span>
+          a Carlos
+          <span class="m" data-cat="man" data-gloss="-man: adentro">al interior</span>
+          de su casa. Al principio Carlos
+          <span class="m" data-cat="verb-aspect" data-gloss="-kuran: pasado reflexivo">mintió</span>,
+          pero Meredith lo sabía
+          <span class="m" data-cat="noun-root" data-gloss="llapa llapanta: todo">todo</span>.
+          No lo
+          <span class="m" data-cat="verb-aspect" data-gloss="-ranchu: pasado negativo">soltó</span>
+          <span class="m" data-cat="kama" data-gloss="-kama: hasta">hasta</span>
+          que él le contó
+          <span class="m" data-cat="manta" data-gloss="-manta: sobre">sobre</span>
+          Victoria.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 21: wool clothes warm me in winter ── -->
+    <div class="card">
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: my (1st person)">Ñoqa</span><span class="m" data-cat="possessive" data-gloss="-q: genitive (my)">q</span>
+        <span class="m" data-cat="noun-root" data-gloss="p'acha: clothing / garment">p'acha</span>
+        <span class="m" data-cat="noun-root" data-gloss="millma: wool">millma</span><span class="m" data-cat="manta" data-gloss="-manta: made of / from (material)">manta</span>
+        <span class="m" data-cat="verb-root" data-gloss="q'oñi-: to warm">q'oñi</span><span class="m" data-cat="verb-aspect" data-gloss="-chin: causative 3rd person (it warms me)">chin</span>
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: me (direct object)">ñoqa</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="invierno: winter">invierno</span><span class="m" data-cat="pi" data-gloss="-pi: locative (in)">pi</span>.
+        <span class="m" data-cat="noun-root" data-gloss="kunan: today / now">Kunan</span>
+        <span class="m" data-cat="noun-root" data-gloss="illariy: dawn / early morning">illariy</span>
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: I">ñoqa</span>
+        <span class="m" data-cat="verb-root" data-gloss="rikch'ari-: to wake up">rikch'ari</span><span class="m" data-cat="verb-aspect" data-gloss="-rani: past 1st person">rani</span>
+        <span class="m" data-cat="noun-root" data-gloss="puñuna: bed / place to sleep">puñuna</span><span class="m" data-cat="pi" data-gloss="-pi: locative (in bed)">pi</span>;
+        <span class="m" data-cat="verb-root" data-gloss="ka-: to be">ka</span><span class="m" data-cat="verb-aspect" data-gloss="-sharani: past progressive 1st person (I was being)">sharani</span>
+        <span class="m" data-cat="noun-root" data-gloss="chiri: cold">chiri</span><span class="m" data-cat="manta" data-gloss="-manta: from / because of">manta</span>.
+        <span class="m" data-cat="noun-root" data-gloss="chayqa: so / then (discourse)">Chayqa</span>
+        <span class="m" data-cat="verb-root" data-gloss="p'acha-ku-: to dress oneself">p'achakura</span><span class="m" data-cat="verb-aspect" data-gloss="-ni: past 1st person reflexive (I dressed myself)">ni</span>
+        <span class="m" data-cat="noun-root" data-gloss="kay: this (demonstrative)">kay</span>
+        <span class="m" data-cat="noun-root" data-gloss="p'acha: clothing">p'acha</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="millma: wool">millma</span><span class="m" data-cat="manta" data-gloss="-manta: made of / from">manta</span>;
+        <span class="m" data-cat="noun-root" data-gloss="chaymantapacha: from then on / after that">chaymantapacha</span>,
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: I">ñoqa</span>
+        <span class="m" data-cat="verb-root" data-gloss="mana ka-: to not be">mana kasharani</span><span class="m" data-cat="verb-aspect" data-gloss="-chu: negation particle">chu</span>
+        <span class="m" data-cat="noun-root" data-gloss="chiri: cold">chiri</span><span class="m" data-cat="manta" data-gloss="-manta: from / because of">manta</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          <span class="m" data-cat="possessive" data-gloss="-q: genitive">My</span>
+          wool
+          <span class="m" data-cat="manta" data-gloss="-manta: made of">clothing</span>
+          <span class="m" data-cat="verb-aspect" data-gloss="-chin: causative">warms</span>
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">me</span>
+          <span class="m" data-cat="pi" data-gloss="-pi: locative">in</span>
+          winter. This morning I
+          <span class="m" data-cat="verb-aspect" data-gloss="-rani: past 1st person">woke up</span>
+          <span class="m" data-cat="pi" data-gloss="-pi: in bed">in bed</span>;
+          I was cold
+          <span class="m" data-cat="manta" data-gloss="-manta: because of">from</span>
+          the cold. So I
+          <span class="m" data-cat="verb-aspect" data-gloss="-rani: past 1st person">put on</span>
+          this wool
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">clothing</span>;
+          after that, I was no longer
+          <span class="m" data-cat="manta" data-gloss="-manta: from">cold</span>.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          <span class="m" data-cat="possessive" data-gloss="-q: genitivo">Mi</span>
+          ropa de
+          <span class="m" data-cat="manta" data-gloss="-manta: hecha de">lana</span>
+          me
+          <span class="m" data-cat="verb-aspect" data-gloss="-chin: causativo">calienta</span>
+          <span class="m" data-cat="pi" data-gloss="-pi: locativo">en</span>
+          invierno. Esta mañana me
+          <span class="m" data-cat="verb-aspect" data-gloss="-rani: pasado 1era persona">desperté</span>
+          <span class="m" data-cat="pi" data-gloss="-pi: en la cama">en cama</span>;
+          tenía frío
+          <span class="m" data-cat="manta" data-gloss="-manta: a causa de">a causa del</span>
+          frío. Entonces me
+          <span class="m" data-cat="verb-aspect" data-gloss="-rani: pasado 1era persona">puse</span>
+          esta ropa de
+          <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">lana</span>;
+          a partir de eso, ya no
+          <span class="m" data-cat="manta" data-gloss="-manta: del">tuve frío</span>.
+        </span>
+      </div>
+    </div>
+
+    </div><!-- /#section-sentences -->
+
+    <!-- ══════════════════════════════════════════════
+         COMPOSITIONS SECTION
+         ══════════════════════════════════════════════ -->
+    <div id="section-compositions" style="display:none">
+
+      <div class="compositions-intro">
+        <p>Extended pieces written by students — click morphemes to explore the language.</p>
+      </div>
+
+      <!-- ── Tai's poem ── -->
+      <div class="composition-card">
+        <div class="comp-author">Tai <span class="comp-week-tag">March 4, 2026</span></div>
+        <div class="comp-body quechua-line">
+          <span class="m" data-cat="noun-root" data-gloss="llaqtamasi: countrypeople / fellow people">Llaqtamasi</span><span class="m" data-cat="possessive" data-gloss="-y: my (1st person possessive)">y</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span>!
+          <span class="m" data-cat="verb-root" data-gloss="osqhay: swiftly / fast (adverb)">Osqhayta</span>
+          <span class="m" data-cat="verb-root" data-gloss="phawa-: to run">phawa</span><span class="m" data-cat="verb-aspect" data-gloss="-sunchis: future inclusive 1st person plural (we shall)">sunchis</span>
+          <span class="m" data-cat="verb-root" data-gloss="taki-: to sing">taki</span><span class="m" data-cat="verb-aspect" data-gloss="-spa: gerund / while singing (subordinate)">spa</span>.<br>
+
+          <span class="m" data-cat="noun-root" data-gloss="llaqta: town / community">Llaqta</span><span class="m" data-cat="possessive" data-gloss="-ychis: your (2nd person plural possessive)">ychis</span><span class="m" data-cat="manta" data-gloss="-manta: from">manta</span>
+          <span class="m" data-cat="verb-root" data-gloss="phawa-: to run">phawa</span><span class="m" data-cat="verb-aspect" data-gloss="-sunchis: future inclusive 1st pl">sunchis</span>,
+          <span class="m" data-cat="noun-root" data-gloss="panpa: plain / field">panpa</span>
+          <span class="m" data-cat="noun-root" data-gloss="panpanta: through the fields (reduplication)">panpanta</span>,
+          <span class="m" data-cat="noun-root" data-gloss="orqo: mountain / hill">orqo</span>
+          <span class="m" data-cat="noun-root" data-gloss="orqonta: through the mountains (reduplication)">orqonta</span>,<br>
+
+          <span class="m" data-cat="noun-root" data-gloss="mayu: river">mayu</span><span class="m" data-cat="possessive" data-gloss="-q: genitive (of the river)">q</span>
+          <span class="m" data-cat="noun-root" data-gloss="wicha: upward / ascending path">wichanta</span>,
+          <span class="m" data-cat="noun-root" data-gloss="sach'a: tree">sach'a</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="possessive" data-gloss="-q: genitive (of the trees)">q</span>
+          <span class="m" data-cat="noun-root" data-gloss="ura: below / beneath">uranta</span>,<br>
+
+          <span class="m" data-cat="verb-root" data-gloss="maskha-: to search / look for">maskha</span><span class="m" data-cat="verb-aspect" data-gloss="-spa: gerund / while searching">spa</span>
+          <span class="m" data-cat="noun-root" data-gloss="hoq: another / a new">hoq</span>
+          <span class="m" data-cat="noun-root" data-gloss="mosoq: new">mosoq</span>
+          <span class="m" data-cat="noun-root" data-gloss="wasi: home / house">wasi</span><span class="m" data-cat="possessive" data-gloss="-nchis: our (inclusive 1st person plural)">nchis</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>.<br><br>
+
+          <span class="m" data-cat="verb-root" data-gloss="phawa-: to run">Phawa</span><span class="m" data-cat="verb-aspect" data-gloss="-sunchis: future inclusive 1st pl">sunchis</span>
+          <span class="m" data-cat="noun-root" data-gloss="ñoqanchis: we (inclusive)">ñoqanchis</span><span class="m" data-cat="possessive" data-gloss="-pa: genitive (our)">pa</span>
+          <span class="m" data-cat="noun-root" data-gloss="ch'aki: thirst / becoming thirsty">ch'aki</span><span class="m" data-cat="verb-aspect" data-gloss="-nanchis: our (becoming) — nominalizer">nanchis</span><span class="m" data-cat="kama" data-gloss="-kama: until (limitative)">kama</span>;<br>
+
+          <span class="m" data-cat="noun-root" data-gloss="chayqa: then / and then (discourse)">chayqa</span>,
+          <span class="m" data-cat="verb-root" data-gloss="ukya-: to drink">ukya</span><span class="m" data-cat="verb-aspect" data-gloss="-sunchis: future inclusive 1st pl">sunchis</span>
+          <span class="m" data-cat="noun-root" data-gloss="sumaq: beautiful / lovely">sumaq</span>
+          <span class="m" data-cat="noun-root" data-gloss="qocha: lake / body of water">qocha</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="manta" data-gloss="-manta: from">manta</span>.<br>
+
+          <span class="m" data-cat="noun-root" data-gloss="ñoqanchis: we (inclusive)">Ñoqanchis</span><span class="m" data-cat="possessive" data-gloss="-pa: genitive">pa</span>
+          <span class="m" data-cat="verb-root" data-gloss="macha-: to get drunk">macha</span><span class="m" data-cat="verb-aspect" data-gloss="-nanchis: our becoming (nominalizer)">nanchis</span><span class="m" data-cat="kama" data-gloss="-kama: until">kama</span>.<br><br>
+
+          <span class="m" data-cat="noun-root" data-gloss="chaymantataq: and then moreover (discourse)">Chaymantataq</span>,
+          <span class="m" data-cat="noun-root" data-gloss="maypi: wherever / where (interrogative)">maypi</span>
+          <span class="m" data-cat="verb-root" data-gloss="ka-: to be">kaq</span><span class="m" data-cat="verb-aspect" data-gloss="-tinchis: subordinate inclusive 1st pl (wherever we are)">tinchispas</span>,<br>
+
+          <span class="m" data-cat="verb-root" data-gloss="illari-: to dawn / to come to light">illari</span><span class="m" data-cat="verb-aspect" data-gloss="-sunchis: future inclusive 1st pl">sunchis</span>
+          <span class="m" data-cat="verb-root" data-gloss="qhawa-: to look / gaze">qhawa</span><span class="m" data-cat="verb-aspect" data-gloss="-spa: gerund / while gazing">spa</span><br>
+
+          <span class="m" data-cat="noun-root" data-gloss="pukay-pukay: red red (intensifying reduplication)">pukay-pukay</span>
+          <span class="m" data-cat="noun-root" data-gloss="hanaqpacha: sky / upper world (celestial)">hanaqpacha</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>.
+        </div>
+        <div class="comp-translation">
+          <div><span class="lang-label">EN</span> My countrypeople! Swiftly we shall run, singing. / From our town we shall run, through the fields, through the mountains, / up the river, below the trees, / looking for a new home. // We shall run until we become thirsty; / then we will drink from the beautiful lakes. / Until we get drunk. // And above all, wherever we are, / we will dawn gazing / at the red, red sky.</div>
+          <div style="margin-top:.4rem"><span class="lang-label">ES</span> ¡Mi gente! Rápidamente correremos, cantando. / Desde nuestro pueblo correremos, por los campos, por las montañas, / subiendo el río, bajo los árboles, / buscando un nuevo hogar. // Correremos hasta que tengamos sed; / luego beberemos de los hermosos lagos. / Hasta emborracharnos. // Y sobre todo, dondequiera que estemos, / amaneceremos mirando / el cielo rojo, rojo.</div>
+        </div>
+      </div>
+
+    </div><!-- /#section-compositions -->
 
   </main>
 
@@ -915,7 +1772,7 @@
 
       <div class="form-group">
         <label>Your name *</label>
-        <input type="text" name="student_name" placeholder="e.g. Aron, Dafne, Harmony…" required />
+        <input type="text" name="student_name" placeholder="Your name" required />
       </div>
 
       <div class="form-group">
@@ -1057,13 +1914,15 @@
     });
   });
 
-  // ── Filter by student ─────────────────────────────────────────────
-  function filterBy(name) {
-    document.querySelectorAll('.card').forEach(card => {
-      const student = card.getAttribute('data-student');
-      card.style.display = (name === 'all' || student === name) ? '' : 'none';
-    });
+  // ── Section switcher (Sentences ↔ Compositions) ──────────────────
+  function showSection(section) {
+    const isSentences = section === 'sentences';
+    document.getElementById('stab-sentences').classList.toggle('active', isSentences);
+    document.getElementById('stab-compositions').classList.toggle('active', !isSentences);
+    document.getElementById('section-sentences').style.display = isSentences ? '' : 'none';
+    document.getElementById('section-compositions').style.display = isSentences ? 'none' : '';
   }
+
 
   // ── Suffix tag picker ─────────────────────────────────────────────
   document.querySelectorAll('.suffix-tag').forEach(tag => {
