@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Runasimi — Class Sentence Repository</title>
+  <!-- ⚙️  SETUP: Replace YOUR_FORM_ID below after creating a free account at formspree.io -->
+  <!-- The form ID looks like: https://formspree.io/f/xyzabcde  →  use  xyzabcde  -->
+  <meta name="formspree-id" content="YOUR_FORM_ID">
+  <style>
+    /* ── Fonts & Base ───────────────────────────────────── */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Suffix color palette */
+      --c-verb-root:      #2d6a4f;
+      --c-verb-aspect:    #52b788;
+      --c-noun-root:      #3d405b;
+      --c-ta:             #e07a5f;
+      --c-kuna:           #d4a017;
+      --c-possessive:     #457b9d;
+      --c-cha:            #c77daa;
+      --c-pi:             #b5873a;
+      --c-manta:          #7b5c3e;
+      --c-man:            #1982c4;
+      --c-wan:            #7b68b5;
+      --c-kama:           #c1121f;
+      --c-reportative:    #f77f00;
+      --c-paq:            #6a994e;
+      --c-rayku:          #8b5e3c;
+      --c-neutral:        #2c2c2c;
+
+      --bg:          #faf8f4;
+      --bg-card:     #ffffff;
+      --border:      #e8e3da;
+      --text-main:   #1a1a1a;
+      --text-muted:  #6b6b6b;
+      --text-label:  #9a9a9a;
+      --accent:      #3d405b;
+      --accent-soft: #eef0f8;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+    header {
+      background: var(--accent);
+      color: white;
+      padding: 2rem 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+    header h1 {
+      font-family: 'Lora', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+    }
+    header p { font-size: .85rem; opacity: .7; }
+
+    /* ── Layout ─────────────────────────────────────────── */
+    .shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 90px);
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────── */
+    aside {
+      background: #f0ede7;
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 1rem;
+      overflow-y: auto;
+    }
+    aside h2 {
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-label);
+      margin-bottom: 1rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .35rem .5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .15s;
+      font-size: .82rem;
+      color: var(--text-main);
+    }
+    .legend-item:hover { background: var(--border); }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-code {
+      font-family: monospace;
+      font-size: .75rem;
+      color: var(--text-muted);
+    }
+    .legend-sep {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: .8rem 0;
+    }
+
+    /* ── Main ─────────────────────────────────────────── */
+    main {
+      padding: 2rem 2.5rem;
+      overflow-y: auto;
+    }
+
+    /* Controls bar */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .controls label {
+      font-size: .8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .toggle-group {
+      display: flex;
+      background: var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .toggle-btn {
+      padding: .35rem .9rem;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      font-size: .82rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: all .15s;
+    }
+    .toggle-btn.active {
+      background: white;
+      color: var(--accent);
+      box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    }
+
+    .filter-select {
+      padding: .35rem .8rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: .82rem;
+      font-family: 'Inter', sans-serif;
+      background: white;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    /* Date group heading */
+    .date-heading {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 2rem 0 1rem;
+      padding-bottom: .4rem;
+      border-bottom: 2px solid var(--accent-soft);
+    }
+    .date-heading:first-of-type { margin-top: 0; }
+
+    /* Sentence card */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.04);
+      transition: box-shadow .2s;
+    }
+    .card:hover { box-shadow: 0 3px 12px rgba(0,0,0,.08); }
+
+    .card-meta {
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-label);
+      font-weight: 600;
+      margin-bottom: .7rem;
+    }
+
+    /* The Quechua sentence */
+    .quechua-line {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      line-height: 1.8;
+      margin-bottom: .6rem;
+      cursor: default;
+    }
+
+    /* A morpheme span — neutral until colorized */
+    .m {
+      display: inline;
+      border-radius: 3px;
+      padding: 1px 0;
+      transition: color .2s, background .2s;
+      cursor: pointer;
+      position: relative;
+    }
+    .m:hover::after {
+      content: attr(data-gloss);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a1a;
+      color: white;
+      font-size: .72rem;
+      padding: .3rem .6rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+
+    /* Color mode: each morpheme gets its category color */
+    .color-mode .m[data-cat="verb-root"]   { color: var(--c-verb-root);   font-weight: 600; }
+    .color-mode .m[data-cat="verb-aspect"] { color: var(--c-verb-aspect); }
+    .color-mode .m[data-cat="noun-root"]   { color: var(--c-noun-root);   font-weight: 600; }
+    .color-mode .m[data-cat="ta"]          { color: var(--c-ta);  }
+    .color-mode .m[data-cat="kuna"]        { color: var(--c-kuna); }
+    .color-mode .m[data-cat="possessive"]  { color: var(--c-possessive); }
+    .color-mode .m[data-cat="cha"]         { color: var(--c-cha); }
+    .color-mode .m[data-cat="pi"]          { color: var(--c-pi); }
+    .color-mode .m[data-cat="manta"]       { color: var(--c-manta); }
+    .color-mode .m[data-cat="man"]         { color: var(--c-man); }
+    .color-mode .m[data-cat="wan"]         { color: var(--c-wan); }
+    .color-mode .m[data-cat="kama"]        { color: var(--c-kama); }
+    .color-mode .m[data-cat="reportative"] { color: var(--c-reportative); }
+    .color-mode .m[data-cat="paq"]         { color: var(--c-paq); }
+    .color-mode .m[data-cat="rayku"]       { color: var(--c-rayku); }
+
+    /* Click-to-reveal: when a word is "lit" via click */
+    .m.lit { font-weight: 700; }
+    .m[data-cat="verb-root"].lit   { color: var(--c-verb-root); }
+    .m[data-cat="verb-aspect"].lit { color: var(--c-verb-aspect); }
+    .m[data-cat="noun-root"].lit   { color: var(--c-noun-root); }
+    .m[data-cat="ta"].lit          { color: var(--c-ta); }
+    .m[data-cat="kuna"].lit        { color: var(--c-kuna); }
+    .m[data-cat="possessive"].lit  { color: var(--c-possessive); }
+    .m[data-cat="cha"].lit         { color: var(--c-cha); }
+    .m[data-cat="pi"].lit          { color: var(--c-pi); }
+    .m[data-cat="manta"].lit       { color: var(--c-manta); }
+    .m[data-cat="man"].lit         { color: var(--c-man); }
+    .m[data-cat="wan"].lit         { color: var(--c-wan); }
+    .m[data-cat="kama"].lit        { color: var(--c-kama); }
+    .m[data-cat="reportative"].lit { color: var(--c-reportative); }
+    .m[data-cat="paq"].lit         { color: var(--c-paq); }
+    .m[data-cat="rayku"].lit       { color: var(--c-rayku); }
+
+    /* Translation lines */
+    .trans {
+      font-size: .88rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin-top: .2rem;
+    }
+    .trans .lang-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-label);
+      margin-right: .4rem;
+    }
+    .trans .t-line { display: block; margin-bottom: .15rem; }
+
+    /* Translation morphemes mirror the Quechua colors */
+    .trans .m { font-style: italic; }
+
+    /* ── Nav tabs (Repository / Submit) ─────────────────── */
+    .nav-tabs {
+      display: flex;
+      gap: 0;
+      background: rgba(255,255,255,.1);
+      border-radius: 8px;
+      padding: 3px;
+      margin-top: .8rem;
+      width: fit-content;
+    }
+    .nav-tab {
+      padding: .35rem 1.1rem;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,.65);
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .nav-tab.active {
+      background: white;
+      color: var(--accent);
+    }
+
+    /* ── Pages ───────────────────────────────────────────── */
+    .page { display: none; }
+    .page.visible { display: contents; }
+
+    /* ── Submit page wrapper ─────────────────────────────── */
+    .submit-page {
+      display: none;
+      padding: 2rem 2.5rem;
+      max-width: 700px;
+    }
+    .submit-page.visible { display: block; }
+
+    .submit-page h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin-bottom: .4rem;
+    }
+    .submit-page .subtitle {
+      font-size: .85rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    /* Form styles */
+    .form-group {
+      margin-bottom: 1.4rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: .45rem;
+    }
+    .form-group .hint {
+      font-size: .75rem;
+      color: var(--text-label);
+      margin-top: .3rem;
+      font-style: italic;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: .65rem .85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: .88rem;
+      color: var(--text-main);
+      background: white;
+      transition: border-color .15s, box-shadow .15s;
+      outline: none;
+    }
+    .form-group textarea {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      min-height: 90px;
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(61,64,91,.1);
+    }
+
+    /* Suffix tag picker */
+    .tag-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .4rem;
+    }
+    .suffix-tag {
+      padding: .3rem .7rem;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: white;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: all .15s;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-muted);
+      user-select: none;
+    }
+    .suffix-tag:hover { border-color: #aaa; }
+    .suffix-tag.selected {
+      border-color: currentColor;
+      font-weight: 600;
+    }
+    /* Each tag gets the color of the suffix it represents */
+    .suffix-tag[data-cat="ta"]          { --tag-c: var(--c-ta); }
+    .suffix-tag[data-cat="kuna"]        { --tag-c: var(--c-kuna); }
+    .suffix-tag[data-cat="possessive"]  { --tag-c: var(--c-possessive); }
+    .suffix-tag[data-cat="cha"]         { --tag-c: var(--c-cha); }
+    .suffix-tag[data-cat="pi"]          { --tag-c: var(--c-pi); }
+    .suffix-tag[data-cat="manta"]       { --tag-c: var(--c-manta); }
+    .suffix-tag[data-cat="man"]         { --tag-c: var(--c-man); }
+    .suffix-tag[data-cat="wan"]         { --tag-c: var(--c-wan); }
+    .suffix-tag[data-cat="kama"]        { --tag-c: var(--c-kama); }
+    .suffix-tag[data-cat="paq"]         { --tag-c: var(--c-paq); }
+    .suffix-tag[data-cat="rayku"]       { --tag-c: var(--c-rayku); }
+    .suffix-tag[data-cat="reportative"] { --tag-c: var(--c-reportative); }
+    .suffix-tag[data-cat="verb-aspect"] { --tag-c: var(--c-verb-aspect); }
+    .suffix-tag.selected { color: var(--tag-c); border-color: var(--tag-c); background: color-mix(in srgb, var(--tag-c) 8%, white); }
+
+    /* Submit button */
+    .btn-submit {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: .75rem 2rem;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .15s, transform .1s;
+      margin-top: .5rem;
+    }
+    .btn-submit:hover { opacity: .85; }
+    .btn-submit:active { transform: scale(.98); }
+    .btn-submit:disabled { opacity: .45; cursor: default; }
+
+    /* Success / error banners */
+    .form-banner {
+      display: none;
+      padding: .9rem 1.2rem;
+      border-radius: 8px;
+      font-size: .85rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+    .form-banner.success { background: #d1fae5; color: #065f46; display: block; }
+    .form-banner.error   { background: #fee2e2; color: #991b1b; display: block; }
+
+    /* Notice about moderation */
+    .moderation-note {
+      margin-top: 1.5rem;
+      padding: .8rem 1rem;
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      font-size: .78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 700px) {
+      .shell { grid-template-columns: 1fr; }
+      aside { display: none; }
+      main { padding: 1.2rem; }
+      .submit-page { padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Runasimi — Sentence Repository</h1>
+  <p>Quechua II · Class examples with morpheme color-coding</p>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-repo" onclick="showPage('repo')">📖 Repository</button>
+    <button class="nav-tab" id="tab-submit" onclick="showPage('submit')">✏️ Submit a sentence</button>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- ── Sidebar legend ─────────────────────────── -->
+  <aside>
+    <h2>Suffix Color Key</h2>
+
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-noun-root)"></span><span>Noun root</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-verb-root)"></span><span>Verb root</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-verb-aspect)"></span><span>Verb aspect/tense</span></div>
+
+    <hr class="legend-sep">
+
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-ta)"></span><span>-<b>ta</b></span><span class="legend-code">accusative</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-kuna)"></span><span>-<b>kuna</b></span><span class="legend-code">plural</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-possessive)"></span><span>-<b>y / -yki / -n</b></span><span class="legend-code">possessive</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-cha)"></span><span>-<b>cha</b></span><span class="legend-code">diminutive / affective</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-pi)"></span><span>-<b>pi</b></span><span class="legend-code">locative</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-manta)"></span><span>-<b>manta</b></span><span class="legend-code">ablative (from)</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-man)"></span><span>-<b>man</b></span><span class="legend-code">allative (to/toward)</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-wan)"></span><span>-<b>wan</b></span><span class="legend-code">comitative (with)</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-kama)"></span><span>-<b>kama</b></span><span class="legend-code">limitative (all the way to)</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-paq)"></span><span>-<b>paq</b></span><span class="legend-code">benefactive (for)</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-rayku)"></span><span>-<b>rayku</b></span><span class="legend-code">causal (because of)</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--c-reportative)"></span><span>-<b>s / -si</b></span><span class="legend-code">reportative</span></div>
+
+    <hr class="legend-sep">
+    <p style="font-size:.72rem;color:var(--text-label);padding:.3rem .5rem">Click any word in a sentence to highlight its morphemes. Toggle <b>Colors</b> to see all at once.</p>
+  </aside>
+
+  <!-- ── Main content ───────────────────────────── -->
+  <main>
+
+    <!-- Controls -->
+    <div class="controls">
+      <label>View:</label>
+      <div class="toggle-group">
+        <button class="toggle-btn active" id="btn-click" onclick="setMode('click')">Click to reveal</button>
+        <button class="toggle-btn" id="btn-color" onclick="setMode('color')">All colors</button>
+        <button class="toggle-btn" id="btn-plain" onclick="setMode('plain')">Plain text</button>
+      </div>
+
+      <label style="margin-left:.8rem">Filter:</label>
+      <select class="filter-select" onchange="filterBy(this.value)">
+        <option value="all">All students</option>
+        <option value="Aron">Aron</option>
+        <option value="Dafne">Dafne</option>
+        <option value="Harmony">Harmony</option>
+        <option value="Tai">Tai</option>
+        <option value="Brigitt">Brigitt</option>
+      </select>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         SENTENCES — add more following this pattern
+         ════════════════════════════════════════════ -->
+
+    <div class="date-heading">February 13, 2026</div>
+
+    <!-- ── SENTENCE 1: alaska ── -->
+    <div class="card" data-student="Aron">
+      <div class="card-meta">Aron · Feb 13</div>
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="I (subject topic)">ñoqa</span>
+        <span class="m" data-cat="verb-root" data-gloss="walk / travel (verb root)">puri</span><span class="m" data-cat="verb-aspect" data-gloss="-saq: future 1st person">saq</span>
+        <span class="m" data-cat="noun-root" data-gloss="Alaska (place)">alaska</span><span class="m" data-cat="kama" data-gloss="-kama: all the way to / until">kama</span>
+        <span class="m" data-cat="noun-root" data-gloss="Nueva York (place)">nuevayork</span><span class="m" data-cat="manta" data-gloss="-manta: from">manta</span>
+        <span class="m" data-cat="verb-aspect" data-gloss="hamuk: next (coming)">hamuk</span>
+        <span class="m" data-cat="noun-root" data-gloss="wata: year">wata</span>
+        <span class="m" data-cat="noun-root" data-gloss="alqo: dog">alqo</span><span class="m" data-cat="cha" data-gloss="-cha: diminutive / affective (dear, little)">cha</span><span class="m" data-cat="possessive" data-gloss="-y: 1st person possessive (my)">y</span><span class="m" data-cat="wan" data-gloss="-wan: with">wan</span>
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          I will walk all the way to
+          <span class="m" data-cat="kama" data-gloss="-kama: all the way to">Alaska</span>
+          from
+          <span class="m" data-cat="manta" data-gloss="-manta: from">New York</span>
+          next year with my
+          <span class="m" data-cat="cha" data-gloss="-cha: affective/diminutive">little</span>/<span class="m" data-cat="cha" data-gloss="-cha: affective">dear</span>
+          <span class="m" data-cat="noun-root" data-gloss="alqo: dog">dog</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: 1st person possessive">(mine)</span>
+          <span class="m" data-cat="wan" data-gloss="-wan: comitative (with)">[with]</span>.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Yo
+          <span class="m" data-cat="verb-root" data-gloss="puri-: caminar">caminaré</span>
+          hasta
+          <span class="m" data-cat="kama" data-gloss="-kama: hasta">Alaska</span>
+          desde
+          <span class="m" data-cat="manta" data-gloss="-manta: desde">Nueva York</span>
+          el próximo año con mi
+          <span class="m" data-cat="cha" data-gloss="-cha: diminutivo/afectivo">perri</span><span class="m" data-cat="possessive" data-gloss="-y: posesivo 1era">to</span>
+          <span class="m" data-cat="wan" data-gloss="-wan: con">[con]</span>.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 2: plato ── -->
+    <div class="card" data-student="Aron">
+      <div class="card-meta">Aron · Feb 13</div>
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="plato: plate/dish">Plato</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="ta" data-gloss="-ta: accusative (direct object)">ta</span>
+        <span class="m" data-cat="verb-root" data-gloss="maqchhi-: to wash">maqchhi</span><span class="m" data-cat="verb-aspect" data-gloss="-naykama: while I was (subordinating)">naykama</span>
+        <span class="m" data-cat="noun-root" data-gloss="iskay: two">iskay</span><span class="m" data-cat="verb-aspect" data-gloss="-nin: both (emphatic)">nin</span>
+        <span class="m" data-cat="noun-root" data-gloss="erqe: child">erqe</span><span class="m" data-cat="possessive" data-gloss="-y: my (1st person possessive)">y</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span>
+        <span class="m" data-cat="verb-root" data-gloss="qhawa-: to watch/look">qhawa</span><span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect (had been doing)">sqa</span>
+        <span class="m" data-cat="noun-root" data-gloss="television: TV">television</span><span class="m" data-cat="ta" data-gloss="-ta: accusative (direct object)">ta</span><span class="m" data-cat="verb-aspect" data-gloss="(implied period)">.</span>
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          While I was
+          <span class="m" data-cat="verb-aspect" data-gloss="-naykama: while I was">washing</span>
+          the
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">dishes</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">(pl)</span>,
+          my
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect (had been)">two</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: my">kids</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">(pl)</span>
+          had been watching the television.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Mientras
+          <span class="m" data-cat="verb-aspect" data-gloss="-naykama: mientras yo">lavaba</span>
+          los
+          <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">platos</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">(pl)</span>,
+          mis dos
+          <span class="m" data-cat="possessive" data-gloss="-y: mi/s">hijos</span>
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">(pl)</span>
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: pasado perfecto">estuvieron</span>
+          mirando la televisión.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── SENTENCE 3: machashani ── -->
+    <div class="card" data-student="Aron">
+      <div class="card-meta">Aron · Feb 13</div>
+      <div class="quechua-line">
+        <span class="m" data-cat="verb-root" data-gloss="macha-: to get drunk">Macha</span><span class="m" data-cat="verb-aspect" data-gloss="-sha: progressive aspect (currently doing)">sha</span><span class="m" data-cat="verb-aspect" data-gloss="-ni: 1st person singular">ni</span>
+        <span class="m" data-cat="noun-root" data-gloss="sapa: every">sapa</span>
+        <span class="m" data-cat="noun-root" data-gloss="tuta: night">tuta</span>
+        <span class="m" data-cat="noun-root" data-gloss="yana: partner/love">yana</span><span class="m" data-cat="possessive" data-gloss="-y: my (1st person possessive)">y</span><span class="m" data-cat="rayku" data-gloss="-rayku: because of">rayku</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          I am
+          <span class="m" data-cat="verb-aspect" data-gloss="-sha: progressive">getting drunk</span>
+          every night
+          <span class="m" data-cat="rayku" data-gloss="-rayku: because of">because of</span>
+          my
+          <span class="m" data-cat="possessive" data-gloss="-y: my">partner</span>.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Me estoy
+          <span class="m" data-cat="verb-aspect" data-gloss="-sha: progresivo">emborrachando</span>
+          cada noche
+          <span class="m" data-cat="rayku" data-gloss="-rayku: por causa de">por</span>
+          mi
+          <span class="m" data-cat="possessive" data-gloss="-y: mi">pareja</span>.
+        </span>
+      </div>
+    </div>
+
+    <!-- ── Dafne sentences ── -->
+    <div class="card" data-student="Dafne">
+      <div class="card-meta">Dafne · Feb 13</div>
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: I / me">Noqa</span>
+        <span class="m" data-cat="verb-root" data-gloss="puñu-: to sleep">puñu</span><span class="m" data-cat="verb-aspect" data-gloss="-naykama: while I was (past subordinate)">naykama</span>
+        <span class="m" data-cat="noun-root" data-gloss="rit'i: snow">rit'i</span>
+        <span class="m" data-cat="verb-root" data-gloss="chullu-: to melt">chullu</span><span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect (had done)">sqa</span>.
+        <span class="m" data-cat="noun-root" data-gloss="temperatura: temperature">Temperatura</span>
+        <span class="m" data-cat="verb-root" data-gloss="wicha-: to rise/increase">wicha</span><span class="m" data-cat="verb-aspect" data-gloss="-shan: 3rd person progressive">shan</span>,
+        <span class="m" data-cat="noun-root" data-gloss="chay: that/therefore (demonstrative)">chay</span>
+        <span class="m" data-cat="rayku" data-gloss="-rayku: because of / that's why">rayku</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          While I was
+          <span class="m" data-cat="verb-aspect" data-gloss="-naykama: while I was">sleeping</span>,
+          the snow had
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect">melted</span>.
+          The temperature is
+          <span class="m" data-cat="verb-aspect" data-gloss="-shan: 3rd person progressive">rising</span>,
+          <span class="m" data-cat="rayku" data-gloss="-rayku: that's why">that's why</span>.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Mientras yo
+          <span class="m" data-cat="verb-aspect" data-gloss="-naykama: mientras dormía">dormía</span>,
+          la nieve se había
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: pasado perfecto">derretido</span>.
+          La temperatura
+          <span class="m" data-cat="verb-aspect" data-gloss="-shan: progresivo 3era">subió</span>,
+          <span class="m" data-cat="rayku" data-gloss="-rayku: por eso">por eso</span>.
+        </span>
+      </div>
+    </div>
+
+    <div class="date-heading">February 17, 2026</div>
+
+    <div class="card" data-student="Aron">
+      <div class="card-meta">Aron · Feb 17</div>
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="tayta: father/dad">Tayta</span><span class="m" data-cat="possessive" data-gloss="-y: 1st person possessive (my)">y</span>
+        <span class="m" data-cat="verb-root" data-gloss="ni-: to say">ni</span><span class="m" data-cat="verb-aspect" data-gloss="-ran: past tense (said)">ran</span>
+        "<span class="m" data-cat="verb-root" data-gloss="mihu-: to eat">Mihuy</span><span class="m" data-cat="verb-aspect" data-gloss="-chis: 2nd person plural imperative (you all eat!)">chis</span>
+        <span class="m" data-cat="noun-root" data-gloss="torta: cake">torta</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>.
+        <span class="m" data-cat="noun-root" data-gloss="mama: mother">Mama</span><span class="m" data-cat="possessive" data-gloss="-yki: 2nd person possessive (your)">yki</span>
+        <span class="m" data-cat="verb-root" data-gloss="ruwa-: to make/do">ruwa</span><span class="m" data-cat="verb-aspect" data-gloss="-ran: past tense">ran</span>
+        <span class="m" data-cat="noun-root" data-gloss="torta: cake">torta</span><span class="m" data-cat="ta" data-gloss="-ta: accusative">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="kinsa: three">kinsa</span>
+        <span class="m" data-cat="noun-root" data-gloss="hora: hour">hora</span><span class="m" data-cat="pi" data-gloss="-pi: locative / in (for 3 hours)">pi</span>
+        <span class="m" data-cat="noun-root" data-gloss="pana: dear sister (female ego)">pana</span><span class="m" data-cat="cha" data-gloss="-cha: diminutive / affective (dear little)">cha</span><span class="m" data-cat="possessive" data-gloss="-yki: your (2nd person possessive)">yki</span><span class="m" data-cat="wan" data-gloss="-wan: with (comitative)">wan</span>"
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: my">My</span>
+          dad said "(You all) Eat the cake.
+          <span class="m" data-cat="possessive" data-gloss="-yki: your">Your</span>
+          mom made the cake for 3 hours with
+          <span class="m" data-cat="cha" data-gloss="-cha: affective">your dear</span>
+          sister
+          <span class="m" data-cat="wan" data-gloss="-wan: with">[with]</span>."
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          <span class="m" data-cat="possessive" data-gloss="-y: mi">Mi</span>
+          papá dijo "(todos ustedes) coman la torta.
+          <span class="m" data-cat="possessive" data-gloss="-yki: su/tu">Su</span>
+          mamá hizo esta torta por 3 horas con
+          <span class="m" data-cat="cha" data-gloss="-cha: diminutivo">su hermani</span><span class="m" data-cat="cha" data-gloss="-cha: afectivo">ta</span>
+          <span class="m" data-cat="wan" data-gloss="-wan: con">[con]</span>."
+        </span>
+      </div>
+    </div>
+
+    <div class="date-heading">February 18, 2026</div>
+
+    <div class="card" data-student="Aron">
+      <div class="card-meta">Aron · Feb 18</div>
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="ñoqa: I">Ñoqa</span><span class="m" data-cat="verb-aspect" data-gloss="-qa: topic marker">qa</span>
+        <span class="m" data-cat="verb-root" data-gloss="apa-: to bring/carry">apa</span><span class="m" data-cat="verb-aspect" data-gloss="-saq: future 1st person">saq</span>
+        <span class="m" data-cat="noun-root" data-gloss="iskay chunka: twenty (20)">iskay chunka</span>
+        <span class="m" data-cat="noun-root" data-gloss="wallpa: chicken">wallpa</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>
+        <span class="m" data-cat="noun-root" data-gloss="raymi: party / celebration">raymi</span><span class="m" data-cat="possessive" data-gloss="-yki: your (2nd person possessive)">yki</span><span class="m" data-cat="man" data-gloss="-man: allative / toward">man</span>
+        <span class="m" data-cat="noun-root" data-gloss="paqarin: tomorrow">paqarin</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          I will
+          <span class="m" data-cat="verb-root" data-gloss="apa-: bring">bring</span>
+          20
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">chickens</span>
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">[DO]</span>
+          to
+          <span class="m" data-cat="man" data-gloss="-man: toward/to">your</span>
+          <span class="m" data-cat="possessive" data-gloss="-yki: your">party</span>
+          tomorrow.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Yo
+          <span class="m" data-cat="verb-root" data-gloss="apa-: traer">traeré</span>
+          veinte
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">pollos</span>
+          <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">[OD]</span>
+          para
+          <span class="m" data-cat="possessive" data-gloss="-yki: tu">tu</span>
+          fiesta mañana.
+        </span>
+      </div>
+    </div>
+
+    <div class="date-heading">February 17, 2026 — Dafne</div>
+
+    <div class="card" data-student="Dafne">
+      <div class="card-meta">Dafne · Feb 17, example 1</div>
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="Looneytunecha: Looney Tunes (+ affective diminutive -cha)">Looneytuneча</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="verb-aspect" data-gloss="-q: genitive/of">q</span>
+        <span class="m" data-cat="noun-root" data-gloss="credito: credits">credito</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="verb-aspect" data-gloss="-n: genitive / of">n</span><span class="m" data-cat="pi" data-gloss="-pi: locative (in)">pi</span>,
+        <span class="m" data-cat="noun-root" data-gloss="porkypig: Porky Pig">porkypig</span>
+        <span class="m" data-cat="verb-root" data-gloss="ni-: to say">ni</span><span class="m" data-cat="verb-aspect" data-gloss="-n: 3rd person present">n</span>
+        "<span class="m" data-cat="noun-root" data-gloss="chayllan: that's all / exactly that">chayllan</span>
+        <span class="m" data-cat="noun-root" data-gloss="chay: that">chay</span>
+        <span class="m" data-cat="noun-root" data-gloss="masi: companion / fellow (classmate, countryman)">masi</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span>"
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          In the credits of the lil'
+          <span class="m" data-cat="cha" data-gloss="-cha: affective diminutive">Looney Tunes</span>,
+          Porky Pig
+          <span class="m" data-cat="verb-root" data-gloss="ni-: say">says</span>
+          "That's all,
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">folks</span>"
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          En los créditos de los Looney Tunes
+          <span class="m" data-cat="cha" data-gloss="-cha: diminutivo afectivo">citos</span>,
+          Porky Pig
+          <span class="m" data-cat="verb-root" data-gloss="ni-: decir">dice</span>
+          "Eso es todo,
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">compañeros</span>"
+        </span>
+      </div>
+    </div>
+
+    <div class="date-heading">March 2, 2026</div>
+
+    <div class="card" data-student="Harmony">
+      <div class="card-meta">Harmony · Mar 2</div>
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="qayna: yesterday / last (past time)">Qayna</span>
+        <span class="m" data-cat="noun-root" data-gloss="p'unchay: day">p'unchay</span>,
+        <span class="m" data-cat="noun-root" data-gloss="mama: mother">mama</span><span class="m" data-cat="possessive" data-gloss="-y: my (1st person possessive)">y</span>
+        <span class="m" data-cat="verb-root" data-gloss="ni-: to say">ni</span><span class="m" data-cat="verb-aspect" data-gloss="-ran: past tense (3rd person)">ran</span>:
+        "<span class="m" data-cat="noun-root" data-gloss="Armonía (name) + -cha affective">Armoníacha</span>
+        <span class="m" data-cat="verb-root" data-gloss="rima-: to speak">rima</span><span class="m" data-cat="verb-aspect" data-gloss="-y: imperative (2nd sg: speak!)">y</span>
+        <span class="m" data-cat="noun-root" data-gloss="Runasimi: Quechua language (lit: people's mouth)">Runasimi</span><span class="m" data-cat="ta" data-gloss="-ta: accusative / direct object">ta</span>.
+        <span class="m" data-cat="verb-root" data-gloss="ati-: to be able to / can">Atin</span><span class="m" data-cat="verb-aspect" data-gloss="-ki: 2nd person singular">ki</span><span class="m" data-cat="verb-aspect" data-gloss="-chu: interrogative / negation particle">chu</span>?"
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          Yesterday
+          <span class="m" data-cat="possessive" data-gloss="-y: my">my</span>
+          mother
+          <span class="m" data-cat="verb-aspect" data-gloss="-ran: past">said</span>:
+          "Hey
+          <span class="m" data-cat="cha" data-gloss="-cha: affective">Harmony</span>,
+          <span class="m" data-cat="verb-aspect" data-gloss="-y: imperative">speak</span>
+          in
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">Quechua</span>.
+          Can
+          <span class="m" data-cat="verb-aspect" data-gloss="-ki: 2nd person">you</span>?"
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          Ayer
+          <span class="m" data-cat="possessive" data-gloss="-y: mi">mi</span>
+          mamá
+          <span class="m" data-cat="verb-aspect" data-gloss="-ran: pasado">dijo</span>:
+          "Ey
+          <span class="m" data-cat="cha" data-gloss="-cha: afectivo">Armonía</span>,
+          <span class="m" data-cat="verb-aspect" data-gloss="-y: imperativo">habla</span>
+          en
+          <span class="m" data-cat="ta" data-gloss="-ta: objeto directo">quechua</span>.
+          ¿
+          <span class="m" data-cat="verb-aspect" data-gloss="-ki: 2da persona">Puedes</span>?"
+        </span>
+      </div>
+    </div>
+
+    <div class="date-heading">January 28, 2026</div>
+
+    <div class="card" data-student="Brigitt">
+      <div class="card-meta">Brigitt · Jan 28</div>
+      <div class="quechua-line">
+        <span class="m" data-cat="noun-root" data-gloss="qayna: last (past)">Qayna</span>
+        <span class="m" data-cat="noun-root" data-gloss="viernes: Friday">viernes</span><span class="m" data-cat="pi" data-gloss="-pi: locative (on)">pi</span>,
+        <span class="m" data-cat="noun-root" data-gloss="justicia: justice">justicia</span>
+        <span class="m" data-cat="noun-root" data-gloss="departamento: department">departamento</span>
+        <span class="m" data-cat="verb-root" data-gloss="qhawa-: to show/display">qhawa</span><span class="m" data-cat="verb-aspect" data-gloss="-chi: causative (make someone see)">chi</span><span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect">sqa</span>
+        <span class="m" data-cat="noun-root" data-gloss="llaqtamasi: countrypeople / fellow citizens">llaqtamasi</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="man" data-gloss="-man: allative (to)">man</span>
+        <span class="m" data-cat="noun-root" data-gloss="kinsa unu: 3 million">kinsa unu</span>
+        <span class="m" data-cat="noun-root" data-gloss="pagina: page">pagina</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="ta" data-gloss="-ta: accusative">ta</span>,
+        <span class="m" data-cat="noun-root" data-gloss="Epstein (name)">Epstein</span><span class="m" data-cat="possessive" data-gloss="-pa: genitive / 's (of)">pa</span>
+        <span class="m" data-cat="noun-root" data-gloss="archivo: file/archive">archivo</span><span class="m" data-cat="verb-aspect" data-gloss="-n: genitive">n</span><span class="m" data-cat="kuna" data-gloss="-kuna: plural">kuna</span><span class="m" data-cat="manta" data-gloss="-manta: from">manta</span>.
+      </div>
+      <div class="trans">
+        <span class="t-line">
+          <span class="lang-label">EN</span>
+          Last Friday, the Justice Department had
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: past perfect (had done)">shown</span>
+          to my fellow
+          <span class="m" data-cat="man" data-gloss="-man: to">countrymen</span>
+          3 million
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">pages</span>
+          <span class="m" data-cat="ta" data-gloss="-ta: direct object">[DO]</span>
+          <span class="m" data-cat="manta" data-gloss="-manta: from">from</span>
+          Epstein's
+          <span class="m" data-cat="possessive" data-gloss="-pa: genitive/of">'s</span>
+          files.
+        </span>
+        <span class="t-line">
+          <span class="lang-label">ES</span>
+          El viernes pasado, el Departamento de Justicia le había
+          <span class="m" data-cat="verb-aspect" data-gloss="-sqa: pasado perfecto">mostrado</span>
+          a mis
+          <span class="m" data-cat="man" data-gloss="-man: a/hacia">compatriotas</span>
+          3 millones de
+          <span class="m" data-cat="kuna" data-gloss="-kuna: plural">páginas</span>
+          <span class="m" data-cat="manta" data-gloss="-manta: de/desde">de</span>
+          los archivos de Epstein.
+        </span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════
+       SUBMIT PAGE  (hidden by default, shown via nav tab)
+       ══════════════════════════════════════════════════════ -->
+  <div class="submit-page" id="submit-page">
+
+    <h2>Submit a sentence</h2>
+    <p class="subtitle">
+      Share a sentence from class! Your submission will be reviewed before it appears in the repository.
+      Fill in what you know — the morpheme breakdown is optional but helpful.
+    </p>
+
+    <div class="form-banner" id="form-success">
+      ✅ Sentence submitted! It'll appear in the repository after review. Thank you!
+    </div>
+    <div class="form-banner error" id="form-error">
+      ⚠️ Something went wrong. Please try again or copy your sentence and email it directly.
+    </div>
+
+    <form id="submit-form" novalidate>
+      <!-- Hidden field for Formspree -->
+      <input type="hidden" name="_subject" value="New Runasimi sentence submission">
+      <input type="hidden" name="_next" value="">
+
+      <div class="form-group">
+        <label>Your name *</label>
+        <input type="text" name="student_name" placeholder="e.g. Aron, Dafne, Harmony…" required />
+      </div>
+
+      <div class="form-group">
+        <label>Class date</label>
+        <input type="date" name="class_date" />
+        <p class="hint">Which class session was this sentence from?</p>
+      </div>
+
+      <div class="form-group">
+        <label>Quechua sentence *</label>
+        <textarea name="quechua" placeholder="e.g.  ñoqa purisaq alaskakama nuevayorkmanta hamuk wata alqochaywan" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>English translation</label>
+        <textarea name="translation_en" placeholder="I will walk all the way to Alaska from New York next year with my little dog"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Spanish translation</label>
+        <textarea name="translation_es" placeholder="Yo caminaré hasta Alaska desde Nueva York el próximo año con mi perrito"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Suffixes used <span style="font-weight:400;text-transform:none;letter-spacing:0">(select all that apply)</span></label>
+        <p class="hint">Click to mark which suffixes appear in your sentence — this helps with color-coding later.</p>
+        <div class="tag-grid" id="suffix-tags">
+          <span class="suffix-tag" data-cat="ta">-ta (accusative)</span>
+          <span class="suffix-tag" data-cat="kuna">-kuna (plural)</span>
+          <span class="suffix-tag" data-cat="possessive">-y / -yki / -n (possessive)</span>
+          <span class="suffix-tag" data-cat="cha">-cha (diminutive)</span>
+          <span class="suffix-tag" data-cat="pi">-pi (locative)</span>
+          <span class="suffix-tag" data-cat="manta">-manta (from)</span>
+          <span class="suffix-tag" data-cat="man">-man (to/toward)</span>
+          <span class="suffix-tag" data-cat="wan">-wan (with)</span>
+          <span class="suffix-tag" data-cat="kama">-kama (all the way to)</span>
+          <span class="suffix-tag" data-cat="paq">-paq (for/benefactive)</span>
+          <span class="suffix-tag" data-cat="rayku">-rayku (because of)</span>
+          <span class="suffix-tag" data-cat="reportative">-s / -si (reportative)</span>
+          <span class="suffix-tag" data-cat="verb-aspect">verb tense/aspect</span>
+        </div>
+        <!-- Hidden field carries the selected tags to Formspree -->
+        <input type="hidden" name="suffixes_used" id="suffixes-hidden" />
+      </div>
+
+      <div class="form-group">
+        <label>Notes for the professor <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <textarea name="notes" placeholder="Anything about the morpheme breakdown, corrections, or context…" style="min-height:70px"></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submit-btn">Send sentence →</button>
+    </form>
+
+    <div class="moderation-note">
+      📋 <strong>How this works:</strong> Submissions are sent to the professor by email via Formspree. Once reviewed and color-coded, they'll be added to the repository. Your name and sentence will appear exactly as submitted unless corrected.
+    </div>
+
+  </div><!-- /submit-page -->
+
+</div><!-- /shell -->
+
+<!-- ── Legend color preview strip ──────────────────────────────── -->
+<div id="color-strip" style="display:none; position:fixed; bottom:0; left:0; right:0; height:6px; background: linear-gradient(90deg, var(--c-verb-root), var(--c-verb-aspect), var(--c-ta), var(--c-kuna), var(--c-possessive), var(--c-cha), var(--c-pi), var(--c-manta), var(--c-man), var(--c-wan), var(--c-kama), var(--c-reportative)); opacity:.7;"></div>
+
+<script>
+  // ── Formspree endpoint ────────────────────────────────────────────
+  // Replace YOUR_FORM_ID with your actual ID from formspree.io
+  // e.g.  'xyzabcde'  from the URL https://formspree.io/f/xyzabcde
+  const FORMSPREE_ID = 'YOUR_FORM_ID';
+
+  // ── Page navigation ───────────────────────────────────────────────
+  const repoShell    = document.querySelector('.shell');
+  const submitPage   = document.getElementById('submit-page');
+
+  // Move submit-page outside the shell so it spans full width
+  // (it's already structured that way in HTML, just toggled via display)
+
+  function showPage(page) {
+    const isRepo = page === 'repo';
+    document.getElementById('tab-repo').classList.toggle('active', isRepo);
+    document.getElementById('tab-submit').classList.toggle('active', !isRepo);
+
+    // Show/hide the two-column layout vs the submit page
+    document.querySelector('.shell').style.display = isRepo ? '' : 'none';
+    document.getElementById('submit-page').classList.toggle('visible', !isRepo);
+  }
+
+  // ── Mode management ───────────────────────────────────────────────
+  let currentMode = 'click';
+
+  function setMode(mode) {
+    currentMode = mode;
+
+    // Update button states
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + mode).classList.add('active');
+
+    // Apply / remove color-mode class to all quechua lines
+    document.querySelectorAll('.quechua-line, .trans').forEach(el => {
+      el.classList.remove('color-mode');
+    });
+
+    if (mode === 'color') {
+      document.querySelectorAll('.quechua-line, .trans').forEach(el => {
+        el.classList.add('color-mode');
+      });
+      document.getElementById('color-strip').style.display = 'block';
+    } else {
+      document.getElementById('color-strip').style.display = 'none';
+    }
+
+    // Clear all .lit highlights when switching away from click mode
+    if (mode !== 'click') {
+      document.querySelectorAll('.m.lit').forEach(el => el.classList.remove('lit'));
+    }
+  }
+
+  // ── Click-to-reveal ───────────────────────────────────────────────
+  // When a morpheme is clicked in 'click' mode, find its data-cat
+  // and light up all morphemes with the same cat in that card
+  document.addEventListener('click', function(e) {
+    if (currentMode !== 'click') return;
+    const m = e.target.closest('.m');
+    if (!m) return;
+
+    const card = m.closest('.card');
+    if (!card) return;
+
+    const cat = m.getAttribute('data-cat');
+    if (!cat) return;
+
+    // Toggle: if already lit, un-light all of this cat in this card
+    const siblings = card.querySelectorAll('.m[data-cat="' + cat + '"]');
+    const isLit = m.classList.contains('lit');
+
+    siblings.forEach(s => {
+      if (isLit) { s.classList.remove('lit'); }
+      else { s.classList.add('lit'); }
+    });
+  });
+
+  // ── Filter by student ─────────────────────────────────────────────
+  function filterBy(name) {
+    document.querySelectorAll('.card').forEach(card => {
+      const student = card.getAttribute('data-student');
+      card.style.display = (name === 'all' || student === name) ? '' : 'none';
+    });
+  }
+
+  // ── Suffix tag picker ─────────────────────────────────────────────
+  document.querySelectorAll('.suffix-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      tag.classList.toggle('selected');
+      updateSuffixHidden();
+    });
+  });
+
+  function updateSuffixHidden() {
+    const selected = [...document.querySelectorAll('.suffix-tag.selected')]
+      .map(t => t.textContent.trim())
+      .join(', ');
+    document.getElementById('suffixes-hidden').value = selected;
+  }
+
+  // ── Submission form ───────────────────────────────────────────────
+  document.getElementById('submit-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('submit-btn');
+    const successEl = document.getElementById('form-success');
+    const errorEl   = document.getElementById('form-error');
+
+    // Hide any previous banners
+    successEl.classList.remove('success');
+    errorEl.classList.remove('error');
+    successEl.style.display = 'none';
+    errorEl.style.display   = 'none';
+
+    // Basic validation
+    const quechua = this.quechua.value.trim();
+    const name    = this.student_name.value.trim();
+    if (!quechua || !name) {
+      errorEl.textContent = '⚠️ Please fill in at least your name and the Quechua sentence.';
+      errorEl.classList.add('error');
+      return;
+    }
+
+    // Check Formspree is configured
+    if (FORMSPREE_ID === 'YOUR_FORM_ID') {
+      // Demo mode: just show success without actually sending
+      successEl.textContent = '✅ [Demo mode] Form works! To enable real submissions, set up Formspree (see README).';
+      successEl.classList.add('success');
+      this.reset();
+      document.querySelectorAll('.suffix-tag').forEach(t => t.classList.remove('selected'));
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      const data = new FormData(this);
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        successEl.classList.add('success');
+        this.reset();
+        document.querySelectorAll('.suffix-tag').forEach(t => t.classList.remove('selected'));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const json = await res.json().catch(() => ({}));
+        throw new Error(json.error || 'Server error');
+      }
+    } catch (err) {
+      errorEl.textContent = `⚠️ Submission failed: ${err.message}. Try again or email your sentence directly.`;
+      errorEl.classList.add('error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send sentence →';
+    }
+  });
+</script>
+
+</body>
+</html>
